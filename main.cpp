@@ -3,20 +3,53 @@
 
 using namespace std;
 
-int main() {
+int screenWidth = 1600;
+int screenHeight = 900;
 
-    
-    cout << "Hello World" << endl;
+void Load();
+void Update();
+void Draw();
+void Unload();
 
-    InitWindow(300, 300, "My first Raylib window!");
-    SetTargetFPS(60);
 
-    while (!WindowShouldClose()) {
-        BeginDrawing();
-        ClearBackground(DARKGREEN);
-        EndDrawing();
+int main()
+{
+    Load();
+
+    while (!WindowShouldClose())
+    {
+        Update();
+        Draw();
     }
 
-    CloseWindow();
+    Unload();
     return 0;
 }
+
+
+void Load() 
+{
+    InitWindow(screenWidth, screenHeight, "RAYLIB PROJECT");
+    SetTargetFPS(60);
+}
+
+void Update() 
+{
+    //
+}
+
+
+void Draw() 
+{
+    BeginDrawing();
+    ClearBackground(LIGHTGRAY);
+
+    EndDrawing();
+}
+
+void Unload() 
+{
+    CloseWindow();
+}
+
+
