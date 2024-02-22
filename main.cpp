@@ -266,11 +266,12 @@ void Draw()
         break;
         case GAMEPLAY:
         {
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    DrawRectangleRec(middleLine.rect, WHITE);
-            //    rect.y += 10;
-            //}
+            int rectY = -5;
+            for (int i = 0; i < 12; i++)
+            {
+                DrawRectangle(810, rectY, 20, 35, WHITE);
+                rectY += 80;
+            }
 
 
             DrawRectangleRec(ball, WHITE);
