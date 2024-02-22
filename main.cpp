@@ -8,21 +8,28 @@ int screenWidth = 1600;
 int screenHeight = 900;
 
 //Ball
-int xBall = 100;
-int yBall = 150;
-int ballSize = 64;
+Rectangle ball { 100, 150, 64, 64 };
 
-int speedXBall = 5;
-int speedYBall = -5;
+int speedXBall = 6;
+int speedYBall = -6;
 
 //Paddle
 Rectangle leftPaddle { 0, 150, 55, 256 };
 int speedLeftPaddle = 8;
 
+Rectangle rightPaddle { screenWidth - 55, 150, 55, 256 };
+int speedRightPaddle = 5;
+
+
+//Function
 void Load();
 void Update();
 void Draw();
 void Unload();
+
+bool Collision(Rectangle a, Rectangle b);
+void BounceOnPaddle(bool playerSide);
+void PlaceBall();
 
 
 int main()
@@ -49,29 +56,29 @@ void Load()
 void Update() 
 {
     //BALL
-    xBall += speedXBall;
-    yBall += speedYBall;
+    ball.x += speedXBall;
+    ball.y += speedYBall;
 
-    if (yBall < 0) 
+    if (ball.y < 0)
     {
         speedYBall = -speedYBall;
-        yBall = 0;
+        ball.y = 0;
     }
-    if (yBall + ballSize > screenHeight) 
+    if (ball.y + ball.height > screenHeight)
     {
         speedYBall = -speedYBall;
-        yBall = screenHeight - ballSize;
+        ball.y = screenHeight - ball.height;
     }
 
-    if (xBall < 0)
+    if (ball.x < 0)
     {
-        speedXBall = -speedXBall;
-        xBall = 0;
+        // L'IA gagne 1 point
+        PlaceBall();
     }
-    if (xBall + ballSize > screenWidth)
+    if (ball.x + ball.width > screenWidth)
     {
-        speedXBall = -speedXBall;
-        xBall = screenWidth - ballSize;
+        // Le joueur gagne 1 point
+        PlaceBall();
     }
 
     //LEFT PADDLE
@@ -92,6 +99,70 @@ void Update()
     {
         leftPaddle.y = screenHeight - leftPaddle.height;
     }
+
+    if (rightPaddle.y < 0)
+    {
+        rightPaddle.y = 0;
+    }
+    if (rightPaddle.y + rightPaddle.height > screenHeight)
+    {
+        rightPaddle.y = screenHeight - rightPaddle.height;
+    }
+
+    //COLLISION
+    if (Collision(leftPaddle, ball))
+    {
+        BounceOnPaddle(true);
+    }
+    else if (Collision(rightPaddle, ball))
+    {
+        BounceOnPaddle(false);
+    }
+
+    //IA Right Paddle
+    if (ball.y < rightPaddle.y + rightPaddle.height / 4)
+    {
+        rightPaddle.y -= speedRightPaddle;
+    }
+    else if (ball.y > rightPaddle.y + rightPaddle.height * 3 / 4)
+    {
+        rightPaddle.y += speedRightPaddle;
+    }
+}
+
+bool Collision(Rectangle a, Rectangle b)
+{
+    int xMinA = a.x;
+    int yMinA = a.y;
+    int xMaxA = a.x + a.width;
+    int yMaxA = a.y + a.height;
+
+    int xMinB = b.x;
+    int yMinB = b.y;
+    int xMaxB = b.x + b.width;
+    int yMaxB = b.y + b.height;
+
+    return ( !(xMinB > xMaxA || yMinB > yMaxA
+        || xMaxB < xMinA || yMaxB < yMinA) );
+}
+
+void BounceOnPaddle(bool playerSide)
+{
+    speedXBall = -speedXBall;
+    if (playerSide)
+    {
+        ball.x = leftPaddle.x + 64;
+    }
+    else
+    {
+        ball.x = rightPaddle.x - 64;
+    }
+}
+
+void PlaceBall()
+{
+    ball.x = 100;
+    ball.y = 150;
 }
 
 void Draw() 
@@ -99,8 +170,9 @@ void Draw()
     BeginDrawing();
     ClearBackground(BLACK);
 
-    DrawRectangle(xBall, yBall, ballSize, ballSize, WHITE);
+    DrawRectangleRec(ball, WHITE);
     DrawRectangleRec(leftPaddle, WHITE);
+    DrawRectangleRec(rightPaddle, WHITE);
 
     EndDrawing();
 }
