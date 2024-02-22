@@ -14,6 +14,7 @@ Rectangle ball { 100, 150, 64, 64 };
 int speedXBall = 6;
 int speedYBall = -6;
 
+
 //Paddle
 Rectangle leftPaddle { 0, 150, 55, 256 };
 int speedLeftPaddle = 8;
@@ -21,9 +22,16 @@ int speedLeftPaddle = 8;
 Rectangle rightPaddle { screenWidth - 55, 150, 55, 256 };
 int speedRightPaddle = 5;
 
+
 //Score
 int leftScore = 0;
 int rightScore = 0;
+//EndOfGame
+string textResult;
+bool resultVisible = false;
+
+//GameState
+int gameState = 0;
 
 //Function
 void Load();
@@ -59,78 +67,99 @@ void Load()
 
 void Update() 
 {
-    //BALL
-    ball.x += speedXBall;
-    ball.y += speedYBall;
+    if (gameState == 0)
+    {
+        //BALL
+        ball.x += speedXBall;
+        ball.y += speedYBall;
 
-    if (ball.y < 0)
-    {
-        speedYBall = -speedYBall;
-        ball.y = 0;
-    }
-    if (ball.y + ball.height > screenHeight)
-    {
-        speedYBall = -speedYBall;
-        ball.y = screenHeight - ball.height;
-    }
+        if (ball.y < 0)
+        {
+            speedYBall = -speedYBall;
+            ball.y = 0;
+        }
+        if (ball.y + ball.height > screenHeight)
+        {
+            speedYBall = -speedYBall;
+            ball.y = screenHeight - ball.height;
+        }
 
-    if (ball.x < 0)
-    {
-        ++rightScore;
-        PlaceBall(true);
-    }
-    if (ball.x + ball.width > screenWidth)
-    {
-        ++leftScore;
-        PlaceBall(false);
-    }
+        if (ball.x < 0)
+        {
+            ++rightScore;
+            PlaceBall(true);
 
-    //LEFT PADDLE
-    if (IsKeyDown(KEY_S))
-    {
-        leftPaddle.y += speedLeftPaddle;
-    }
-    else if(IsKeyDown(KEY_W))
-    {
-        leftPaddle.y -= speedLeftPaddle;
-    }
+            if (rightScore >= 3)
+            {
+                gameState = 2;
+                textResult = "Defeat";
+                resultVisible = true;
+            }
+        }
+        if (ball.x + ball.width > screenWidth)
+        {
+            ++leftScore;
+            PlaceBall(false);
 
-    if (leftPaddle.y < 0)
-    {
-        leftPaddle.y = 0;
-    }
-    if (leftPaddle.y + leftPaddle.height > screenHeight)
-    {
-        leftPaddle.y = screenHeight - leftPaddle.height;
-    }
+            if (leftScore >= 3)
+            {
+                gameState = 1;
+                textResult = "Victory";
+                resultVisible = true;
+            }
+        }
 
-    if (rightPaddle.y < 0)
-    {
-        rightPaddle.y = 0;
-    }
-    if (rightPaddle.y + rightPaddle.height > screenHeight)
-    {
-        rightPaddle.y = screenHeight - rightPaddle.height;
-    }
+        //LEFT PADDLE
+        if (IsKeyDown(KEY_S))
+        {
+            leftPaddle.y += speedLeftPaddle;
+        }
+        else if (IsKeyDown(KEY_W))
+        {
+            leftPaddle.y -= speedLeftPaddle;
+        }
 
-    //COLLISION
-    if (Collision(leftPaddle, ball))
-    {
-        BounceOnPaddle(true);
-    }
-    else if (Collision(rightPaddle, ball))
-    {
-        BounceOnPaddle(false);
-    }
+        if (leftPaddle.y < 0)
+        {
+            leftPaddle.y = 0;
+        }
+        if (leftPaddle.y + leftPaddle.height > screenHeight)
+        {
+            leftPaddle.y = screenHeight - leftPaddle.height;
+        }
 
-    //IA Right Paddle
-    if (ball.y < rightPaddle.y + rightPaddle.height / 4)
-    {
-        rightPaddle.y -= speedRightPaddle;
+        if (rightPaddle.y < 0)
+        {
+            rightPaddle.y = 0;
+        }
+        if (rightPaddle.y + rightPaddle.height > screenHeight)
+        {
+            rightPaddle.y = screenHeight - rightPaddle.height;
+        }
+
+        //COLLISION
+        if (Collision(leftPaddle, ball))
+        {
+            BounceOnPaddle(true);
+        }
+        else if (Collision(rightPaddle, ball))
+        {
+            BounceOnPaddle(false);
+        }
+
+        //IA Right Paddle
+        if (ball.y < rightPaddle.y + rightPaddle.height / 4)
+        {
+            rightPaddle.y -= speedRightPaddle;
+        }
+        else if (ball.y > rightPaddle.y + rightPaddle.height * 3 / 4)
+        {
+            rightPaddle.y += speedRightPaddle;
+        }
     }
-    else if (ball.y > rightPaddle.y + rightPaddle.height * 3 / 4)
+    else
     {
-        rightPaddle.y += speedRightPaddle;
+        //
     }
 }
 
@@ -167,11 +196,11 @@ void PlaceBall(bool playerSide)
 {
     if (playerSide)
     {
-        ball.x = 100;
+        ball.x = 250;
     }
     else
     {
-        ball.x = screenWidth - 100;
+        ball.x = screenWidth - 250;
     }
 
     ball.y = 150;
@@ -189,6 +218,11 @@ void Draw()
     DrawRectangleRec(ball, WHITE);
     DrawRectangleRec(leftPaddle, WHITE);
     DrawRectangleRec(rightPaddle, WHITE);
+
+    if (resultVisible)
+    {
+        DrawText(textResult.c_str(), 700, 200, 80, LIGHTGRAY);
+    }
 
     EndDrawing();
 }
