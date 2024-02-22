@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include <iostream>
+#include <string>
 
 using namespace std;
 
@@ -20,6 +21,9 @@ int speedLeftPaddle = 8;
 Rectangle rightPaddle { screenWidth - 55, 150, 55, 256 };
 int speedRightPaddle = 5;
 
+//Score
+int leftScore = 0;
+int rightScore = 0;
 
 //Function
 void Load();
@@ -29,7 +33,7 @@ void Unload();
 
 bool Collision(Rectangle a, Rectangle b);
 void BounceOnPaddle(bool playerSide);
-void PlaceBall();
+void PlaceBall(bool playerSide);
 
 
 int main()
@@ -72,13 +76,13 @@ void Update()
 
     if (ball.x < 0)
     {
-        // L'IA gagne 1 point
-        PlaceBall();
+        ++rightScore;
+        PlaceBall(true);
     }
     if (ball.x + ball.width > screenWidth)
     {
-        // Le joueur gagne 1 point
-        PlaceBall();
+        ++leftScore;
+        PlaceBall(false);
     }
 
     //LEFT PADDLE
@@ -159,16 +163,28 @@ void BounceOnPaddle(bool playerSide)
     }
 }
 
-void PlaceBall()
+void PlaceBall(bool playerSide)
 {
-    ball.x = 100;
+    if (playerSide)
+    {
+        ball.x = 100;
+    }
+    else
+    {
+        ball.x = screenWidth - 100;
+    }
+
     ball.y = 150;
+    speedXBall = -speedXBall;
 }
 
 void Draw() 
 {
     BeginDrawing();
     ClearBackground(BLACK);
+
+    DrawText(to_string(leftScore).c_str(), 600, 50, 60, LIGHTGRAY);
+    DrawText(to_string(rightScore).c_str(), 1000, 50, 60, LIGHTGRAY);
 
     DrawRectangleRec(ball, WHITE);
     DrawRectangleRec(leftPaddle, WHITE);
