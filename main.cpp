@@ -11,15 +11,6 @@ GameScreen currentScreen;
 int screenWidth = 1600;
 int screenHeight = 900;
 
-////MiddleLine
-//struct MiddleLine
-//{
-//    Rectangle rect;
-//};
-//
-//Rectangle rect { 830 - rect.width / 2, 0, 30, 40 };
-//MiddleLine middleLine { rect };
-
 //Ball
 Rectangle ball { 100, 150, 64, 64 };
 
@@ -284,9 +275,6 @@ void Draw()
         break;
         case ENDING:
         {
-            //DrawText(to_string(leftScore).c_str(), 600, 50, 60, LIGHTGRAY);
-            //DrawText(to_string(rightScore).c_str(), 1000, 50, 60, LIGHTGRAY);
-
             DrawText(textResult.c_str(), 680, 200, 80, LIGHTGRAY);
             DrawText("Press R to PLAY AGAIN", 350, 400, 80, LIGHTGRAY);
             DrawText("Or Press M to go back to MENU", 150, 500, 80, LIGHTGRAY);
