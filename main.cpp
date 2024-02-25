@@ -1,6 +1,9 @@
-#include "raylib.h"
 #include <iostream>
 #include <string>
+
+#include "raylib.h"
+#include "allPokemons.h"
+#include "Trainer.h"
 
 using namespace std;
 
@@ -9,7 +12,18 @@ GameScreen currentScreen;
 
 //Screen
 int screenWidth = 1600;
-int screenHeight = 900;
+int screenHeight = 1200;
+
+//text Box
+Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
+
+//--------------------------------------TO CHANGE -------------------------------------------------------------------
+vector<Pokemon> firstTeam = { Minun, Pansage, Vanillite };
+vector<Pokemon> secondTeam = { Magikarp, Snorlax };
+
+Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
+Trainer secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam);
+//--------------------------------------TO CHANGE -------------------------------------------------------------------
 
 //Function
 void Load();
@@ -50,7 +64,7 @@ void Update()
             if (IsKeyPressed(KEY_ENTER))
             {
                 //currentScreen = START;
-                currentScreen = STROLL;
+                currentScreen = ATTACKTRAINER;
             }
         }
         break;
@@ -102,14 +116,14 @@ void StrollingAround()
 void Draw() 
 {
     BeginDrawing();
-    ClearBackground(BLACK);
+    ClearBackground(LIGHTGRAY);
 
     switch (currentScreen)
     {
         case MENU:
         {
-            DrawText("PONG", 580, 150, 150, RED);
-            DrawText("Press ENTER to PLAY", 350, 400, 80, LIGHTGRAY);
+            DrawText("POKEMON", 450, 150, 150, RED);
+            DrawText("Press ENTER to PLAY", 350, 400, 80, BLACK);
         }
         break;
         case START:
@@ -124,18 +138,19 @@ void Draw()
         break;
         case ATTACKPOKEMON:
         {
-            //
+            DrawRectangleRec(TextBox, WHITE);
         }
         break;
         case ATTACKTRAINER:
         {
-            //
+            DrawRectangleRec(TextBox, WHITE);
+            firstTrainer.DrawTrainer(TextBox.x + 20, TextBox.y + 20, 30);
         }
         break;
         case ENDING:
         {
-            DrawText("Press R to PLAY AGAIN", 350, 400, 80, LIGHTGRAY);
-            DrawText("Or Press M to go back to MENU", 150, 500, 80, LIGHTGRAY);
+            DrawText("Press R to PLAY AGAIN", 350, 400, 80, BLACK);
+            DrawText("Or Press M to go back to MENU", 150, 500, 80, BLACK);
         }
         break;
         default: break;
