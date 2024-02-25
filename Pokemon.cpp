@@ -21,8 +21,9 @@ Pokemon::Pokemon()
 	mAbilities = { Thunder, Aeroblast };
 }
 
-Pokemon::Pokemon(string name, string description, PokeType type, int life, vector<Ability> abilitie)
+Pokemon::Pokemon(Image imagePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie)
 {
+	mImagePokemon = imagePokemon;
 	mName = name;
 	mDescription = description;
 	mType = type;
@@ -41,6 +42,7 @@ void Pokemon::Draw()
 {
 	//box dialogue
 	// Maybe not text dialogue, just the text itlsef
+	// not sure about this
 	//center text in middle of box
 	if (canUseSkill)
 	{
@@ -216,6 +218,11 @@ const vector<Ability>& Pokemon::GetAbilities()
 string Pokemon::GetPokemonName()
 {
 	return mName;
+}
+
+Image Pokemon::GetPokemonImage()
+{
+	return mImagePokemon;
 }
 
 float Pokemon::GetPokemonLife()

@@ -43,14 +43,19 @@ const char* Trainer::ChallengeTrainer()
 	return (char*) TextFormat("You are challenging %s %s !!!", mFirstName.c_str(), mLastName.c_str());
 }
 
-void Trainer::ChallengePokemon(Trainer& thePlayer)
-{
-	//*************** TO REFACTOR ***************************************
-	cout << "\nYou just found a wild pokemon !!" << endl;
-
-	//Battle theBattle = Battle(thePlayer);
-	//theBattle.BattleAgainstPokemon(true);
-}
+//*************** TO REFACTOR ***************************************
+// 
+// JUST PRINT the wild pokemon found in the main
+// 
+//const char* Trainer::ChallengePokemon()
+//{
+//	(char*) TextFormat("You are challenging %s %s !!!", mFirstName.c_str(), mLastName.c_str());
+//	//*************** TO REFACTOR ***************************************
+//	cout << "\nYou just found a wild pokemon !!" << endl;
+//
+//	//Battle theBattle = Battle(thePlayer);
+//	//theBattle.BattleAgainstPokemon(true);
+//}
 
 bool Trainer::IsPokemonCaptured(Pokemon& pokemon)
 {

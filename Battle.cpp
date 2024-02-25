@@ -6,10 +6,18 @@
 #include "Battle.h"
 #include "allPokemons.h"
 
-//text Variable
+//Variables
 const char* firstLine = "";
 const char* secondLine = "";
 const char* thirdLine = "";
+
+bool imageIsLoad = false;
+
+Image playerPokemonImage = LoadImage("resources/white.png");
+Image opponentPokemonImage = LoadImage("resources/white.png");
+
+Texture2D opponentPokemonTexture;
+
 
 Battle::Battle(Trainer& thePlayer)
 {
@@ -26,21 +34,23 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 
 void Battle::BattleUpdate()
 {
-	//
+
 }
 
 void Battle::BattleDraw()
 {
-	//mThePlayer->DrawTrainer();
-	//DrawText("Press R to PLAY AGAIN", 70, 775, 80, BLACK);
 	DrawText(firstLine, 70, 775, 70, BLACK);
 	DrawText(secondLine, 70, 870, 70, BLACK);
 	DrawText(thirdLine, 70, 1050, 70, BLACK);
-	//after introduction delete
-	//mOpponentTrainer->DrawTrainer();
-	//mOppoentTrainer first and second line =  ""
 
-	//do all the draw in the trainer func. Call the draw trainer first and second line everytime ?
+	if (!imageIsLoad)
+	{
+		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
+		imageIsLoad = true;
+	}
+
+	DrawTexture(opponentPokemonTexture, 1080, 10, WHITE);
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
@@ -55,15 +65,16 @@ Pokemon Battle::ChooseOpponentPokemon()
 
 	srand(time(NULL));
 	int randomPokemon = rand() % pokemonTeam.size();
-
 	mOpponnentPokemon = &pokemonTeam[randomPokemon];
+
+	opponentPokemonImage = mOpponnentPokemon->GetPokemonImage();
+	imageIsLoad = false;
 
 	secondLine = mOpponentTrainer->Introduction();
 
-	//thirdLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+	thirdLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
-	//mUsedOpponentPokemon = *mOpponnentPokemon;
 }
 
 void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
@@ -71,22 +82,14 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = &opponentPokemon;
 
-	//mUsedOpponentPokemon = *mOpponnentPokemon;
-	if (IsKeyPressed(KEY_SPACE))
-	{
-		secondLine = "";
-		firstLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
-		//firstLine = (char*) TextFormat(" %s attack you", mOpponnentPokemon->GetPokemonName().c_str());
-	}
-
 	return;
 
+	//NEED TO REFACTOR SEND OR CHANGE PK
 	mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-
-	//mOpponnentPokemon = &mUsedOpponentPokemon;
 
 	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 	{
+		//check attackotherpokemon if need to refactor
 		if (mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon))
 		{
 			//*************** TO REFACTOR ***************************************
@@ -98,6 +101,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 				break;
 			}
 
+			srand(time(NULL));
 			const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
 			int randomAbility = rand() % abilities.size();
 			mOpponentPokemonAbility = abilities[randomAbility];
@@ -118,6 +122,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 	if (mOpponnentPokemon->GetPokemonLife() <= 0)
 	{
+		//win fight check the refactor
 		mThePlayer->WinFight();
 
 		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
@@ -133,6 +138,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		//*************** TO REFACTOR ***************************************
 		cout << "\nYour Pokemon is leveling up !!! \nYou can now learn a new ability !" << endl;
 		mPlayerPokemon->LearnNewAbilities();
+		//*************** TO REFACTOR ***************************************
 
 		return;
 	}
@@ -144,6 +150,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 		if (mThePlayer->CheckIfTeamDead())
 		{
+			//you can maybe print the result here ?
 			return;
 		}
 		if (!mThePlayer->CheckIfTeamDead())

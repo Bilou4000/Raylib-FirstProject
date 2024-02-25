@@ -33,7 +33,7 @@ public:
 
 	const char* Introduction();
 	const char* ChallengeTrainer();
-	void ChallengePokemon(Trainer& thePlayer);
+	//const char* ChallengePokemon();
 	bool IsPokemonCaptured(Pokemon& pokemon);
 	Pokemon& SendOrChangePokemon();
 	void WinFight();

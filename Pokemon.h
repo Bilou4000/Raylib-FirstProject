@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 
+#include "raylib.h"
 #include "PokeType.h"
 #include "Ability.h"
 
@@ -10,6 +11,7 @@ using namespace std;
 class Pokemon
 {
 private:
+	Image mImagePokemon;
 	string mName;
 	string mDescription;
 	PokeType mType;
@@ -22,16 +24,18 @@ private:
 
 public:
 	Pokemon();
-	Pokemon(string name, string description, PokeType type, int life, vector<Ability> abilitie);
+	Pokemon(Image imagePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie);
 
 	void Update();
 	void Draw();
 
 	const vector<Ability>& GetAbilities();
 	string GetPokemonName();
+	Image GetPokemonImage();
 	float GetPokemonLife();
 	float GetPokemonMaxLife();
 	float GetPokemonDamage();
+
 	void TakeDamage(int damage, Ability abilityAttack);
 	void Rest();
 
