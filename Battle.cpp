@@ -50,7 +50,7 @@ void Battle::BattleDraw()
 		imageIsLoad = true;
 	}
 
-	DrawTexture(opponentPokemonTexture, 1080, 10, WHITE);
+	DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
