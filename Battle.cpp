@@ -6,7 +6,10 @@
 #include "Battle.h"
 #include "allPokemons.h"
 
+//text Variable
 const char* firstLine = "";
+const char* secondLine = "";
+const char* thirdLine = "";
 
 Battle::Battle(Trainer& thePlayer)
 {
@@ -28,7 +31,11 @@ void Battle::BattleUpdate()
 
 void Battle::BattleDraw()
 {
-	//DrawText(firstLine, 70, 775, 80, BLACK);
+	//mThePlayer->DrawTrainer();
+	//DrawText("Press R to PLAY AGAIN", 70, 775, 80, BLACK);
+	DrawText(firstLine, 70, 775, 70, BLACK);
+	DrawText(secondLine, 70, 870, 70, BLACK);
+	DrawText(thirdLine, 70, 1050, 70, BLACK);
 	//after introduction delete
 	//mOpponentTrainer->DrawTrainer();
 	//mOppoentTrainer first and second line =  ""
@@ -36,48 +43,47 @@ void Battle::BattleDraw()
 	//do all the draw in the trainer func. Call the draw trainer first and second line everytime ?
 }
 
-void Battle::BattleAgainstTrainer(bool firstTime)
+Pokemon Battle::ChooseOpponentPokemon()
 {
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = nullptr;
 
-	if (firstTime)
+	firstLine = mOpponentTrainer->ChallengeTrainer();
+	mMaxAbilityCost = 30;
+
+	vector<Pokemon>& pokemonTeam = mOpponentTrainer->GetPokemonTeam();
+
+	srand(time(NULL));
+	int randomPokemon = rand() % pokemonTeam.size();
+
+	mOpponnentPokemon = &pokemonTeam[randomPokemon];
+
+	secondLine = mOpponentTrainer->Introduction();
+
+	//thirdLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+
+	return *mOpponnentPokemon;
+	//mUsedOpponentPokemon = *mOpponnentPokemon;
+}
+
+void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
+{
+	Pokemon* mPlayerPokemon = nullptr;
+	Pokemon* mOpponnentPokemon = &opponentPokemon;
+
+	//mUsedOpponentPokemon = *mOpponnentPokemon;
+	if (IsKeyPressed(KEY_SPACE))
 	{
-		mMaxAbilityCost = 30;
-
-		vector<Pokemon>& pokemonTeam = mOpponentTrainer->GetPokemonTeam();
-		int randomPokemon = rand() % pokemonTeam.size();
-		mOpponnentPokemon = &pokemonTeam[randomPokemon];
-
-		mOpponentTrainer->Introduction();
-
-		//*************** TO REFACTOR ***************************************
-		//std::cout << "He is using " << mOpponnentPokemon->GetPokemonName() << " to attack you" << endl;
-
-		//firstLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
-		//DrawText(TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str()), 70, 775, 80, BLACK);
-		//mThePlayer->DrawTrainer();
-
-		return;
-
-		mUsedOpponentPokemon = *mOpponnentPokemon;
-
-		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-	}
-	else
-	{
-		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-
-		if (mPlayerPokemon->GetPokemonLife() <= 0)
-		{
-			//*************** TO REFACTOR ***************************************
-			cout << "This pokemon is already dead, please choose an other pokemon" << endl;
-
-			return BattleAgainstTrainer(false);
-		}
+		secondLine = "";
+		firstLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+		//firstLine = (char*) TextFormat(" %s attack you", mOpponnentPokemon->GetPokemonName().c_str());
 	}
 
-	mOpponnentPokemon = &mUsedOpponentPokemon;
+	return;
+
+	mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+
+	//mOpponnentPokemon = &mUsedOpponentPokemon;
 
 	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 	{
@@ -106,7 +112,7 @@ void Battle::BattleAgainstTrainer(bool firstTime)
 		}
 		else
 		{
-			return BattleAgainstTrainer(false);
+			return BattleAgainstTrainer(*mOpponnentPokemon);
 		}
 	}
 
@@ -142,9 +148,9 @@ void Battle::BattleAgainstTrainer(bool firstTime)
 		}
 		if (!mThePlayer->CheckIfTeamDead())
 		{
-			mDeadPlayerPokemon = *mPlayerPokemon;
+			//mDeadPlayerPokemon = *mPlayerPokemon;
 
-			return BattleAgainstTrainer(false);
+			return BattleAgainstTrainer(*mOpponnentPokemon);
 		}
 	}
 }

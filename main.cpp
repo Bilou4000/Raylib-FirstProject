@@ -4,6 +4,7 @@
 #include "raylib.h"
 #include "allPokemons.h"
 #include "Trainer.h"
+#include "Battle.h"
 
 using namespace std;
 
@@ -24,6 +25,10 @@ vector<Pokemon> secondTeam = { Magikarp, Snorlax };
 Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
 Trainer secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam);
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
+
+Battle theBattle = Battle(firstTrainer, secondTrainer);
+Pokemon opponentPokemon = Pokemon();
+bool isInCombat = false;
 
 //Function
 void Load();
@@ -85,7 +90,13 @@ void Update()
         break;
         case ATTACKTRAINER:
         {
-            firstTrainer.ChallengeTrainer(secondTrainer, firstTrainer);
+            if (!isInCombat)
+            {
+                opponentPokemon = theBattle.ChooseOpponentPokemon();
+                isInCombat = true;
+            }
+
+            theBattle.BattleAgainstTrainer(opponentPokemon);
         }
         break;
         case ENDING:
@@ -144,7 +155,8 @@ void Draw()
         case ATTACKTRAINER:
         {
             DrawRectangleRec(TextBox, WHITE);
-            firstTrainer.DrawTrainer();
+            theBattle.BattleDraw();
+            //firstTrainer.DrawTrainer();
         }
         break;
         case ENDING:

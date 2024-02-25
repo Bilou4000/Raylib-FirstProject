@@ -31,8 +31,8 @@ public:
 	void UpdateTrainer();
 	void DrawTrainer();
 
-	void Introduction();
-	void ChallengeTrainer(Trainer& thePlayer, Trainer& otherTrainer);
+	const char* Introduction();
+	const char* ChallengeTrainer();
 	void ChallengePokemon(Trainer& thePlayer);
 	bool IsPokemonCaptured(Pokemon& pokemon);
 	Pokemon& SendOrChangePokemon();

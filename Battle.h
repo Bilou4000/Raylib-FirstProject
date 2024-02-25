@@ -22,7 +22,8 @@ class Battle
 	void BattleUpdate();
 	void BattleDraw();
 
-	void BattleAgainstTrainer(bool firstTime);
+	Pokemon ChooseOpponentPokemon();
+	void BattleAgainstTrainer(Pokemon& opponentPokemon);
 	void BattleAgainstPokemon(bool firstTime);
 };
 

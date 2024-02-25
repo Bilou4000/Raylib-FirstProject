@@ -33,21 +33,14 @@ void Trainer::DrawTrainer()
 	DrawText(mSecondLine, 70, 775 + 60, 35, BLACK);
 }
 
-void Trainer::Introduction()
+const char* Trainer::Introduction()
 {
-	mSecondLine = (char*) TextFormat("%s %s said : %s", mFirstName.c_str(), mLastName.c_str(), mCatchPhrase.c_str());
-	//delete line
-	//std::cout << "He is using " << mOpponnentPokemon->GetPokemonName() << " to attack you" << endl;
-	//firstLine = (char*) TextFormat("He is using %s to attack you.", .c_str());
+	return (char*) TextFormat("%s %s said : %s", mFirstName.c_str(), mLastName.c_str(), mCatchPhrase.c_str());
 }
 
-void Trainer::ChallengeTrainer(Trainer& thePlayer, Trainer& otherTrainer)
+const char* Trainer::ChallengeTrainer()
 {
-	mFirstLine = (char*) TextFormat("You are challenging %s %s !!!", otherTrainer.mFirstName.c_str(), otherTrainer.mLastName.c_str());
-
-	Battle theBattle = Battle(thePlayer, otherTrainer);
-	theBattle.BattleAgainstTrainer(true);
-
+	return (char*) TextFormat("You are challenging %s %s !!!", mFirstName.c_str(), mLastName.c_str());
 }
 
 void Trainer::ChallengePokemon(Trainer& thePlayer)
@@ -55,8 +48,8 @@ void Trainer::ChallengePokemon(Trainer& thePlayer)
 	//*************** TO REFACTOR ***************************************
 	cout << "\nYou just found a wild pokemon !!" << endl;
 
-	Battle theBattle = Battle(thePlayer);
-	theBattle.BattleAgainstPokemon(true);
+	//Battle theBattle = Battle(thePlayer);
+	//theBattle.BattleAgainstPokemon(true);
 }
 
 bool Trainer::IsPokemonCaptured(Pokemon& pokemon)
