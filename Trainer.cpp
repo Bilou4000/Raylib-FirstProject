@@ -6,9 +6,6 @@
 #include "allPokemons.h"
 #include "Battle.h"
 
-string textToReturn = "";
-bool isInIntroduction = false;
-
 Trainer::Trainer()
 {
 	mFirstName = "Arthur";
@@ -30,33 +27,27 @@ void Trainer::UpdateTrainer()
 	//
 }
 
-void Trainer::DrawTrainer(float posX, float posY, float fontSize)
+void Trainer::DrawTrainer()
 {
-	if (isInIntroduction)
-	{
-		DrawText(TextFormat();
-	}
-
-}
-
-string Trainer::TextToReturn()
-{
-	return string();
+	DrawText(mFirstLine, 70, 775, 35, BLACK);
+	DrawText(mSecondLine, 70, 775 + 60, 35, BLACK);
 }
 
 void Trainer::Introduction()
 {
-	const char* introduction =  TextFormat("%s %s said : %s", mFirstName.c_str(), mLastName.c_str(), mCatchPhrase.c_str()), posX, posY, fontSize, BLACK);
-	isInIntroduction = true;
+	mSecondLine = (char*) TextFormat("%s %s said : %s", mFirstName.c_str(), mLastName.c_str(), mCatchPhrase.c_str());
+	//delete line
+	//std::cout << "He is using " << mOpponnentPokemon->GetPokemonName() << " to attack you" << endl;
+	//firstLine = (char*) TextFormat("He is using %s to attack you.", .c_str());
 }
 
 void Trainer::ChallengeTrainer(Trainer& thePlayer, Trainer& otherTrainer)
 {
-	//*************** TO REFACTOR ***************************************
-	//cout << "\nI challenge you " << otherTrainer.mFirstName << " " << otherTrainer.mLastName << " !!" << endl;
+	mFirstLine = (char*) TextFormat("You are challenging %s %s !!!", otherTrainer.mFirstName.c_str(), otherTrainer.mLastName.c_str());
 
 	Battle theBattle = Battle(thePlayer, otherTrainer);
 	theBattle.BattleAgainstTrainer(true);
+
 }
 
 void Trainer::ChallengePokemon(Trainer& thePlayer)

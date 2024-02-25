@@ -19,6 +19,9 @@ class Battle
 	Battle(Trainer& thePlayer);
 	Battle(Trainer& thePlayer, Trainer& opponentTrainer);
 
+	void BattleUpdate();
+	void BattleDraw();
+
 	void BattleAgainstTrainer(bool firstTime);
 	void BattleAgainstPokemon(bool firstTime);
 };

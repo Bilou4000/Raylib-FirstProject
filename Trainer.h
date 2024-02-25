@@ -20,14 +20,16 @@ private:
 	int mPokeballs = 10;
 	int mCurrentPokemonIndex = 0;
 
+	const char* mFirstLine = "";
+	const char* mSecondLine = "";
+
 
 public:
 	Trainer();
 	Trainer(string firstName, string lastName, string CatchPhrase, vector<Pokemon> PokemonTeam);
 
 	void UpdateTrainer();
-	void DrawTrainer(float posX, float posY, float fontSize);
-	string TextToReturn();
+	void DrawTrainer();
 
 	void Introduction();
 	void ChallengeTrainer(Trainer& thePlayer, Trainer& otherTrainer);

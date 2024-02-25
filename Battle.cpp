@@ -1,8 +1,12 @@
 #pragma once
 
 #include <iostream>
+#include "raylib.h"
+
 #include "Battle.h"
 #include "allPokemons.h"
+
+const char* firstLine = "";
 
 Battle::Battle(Trainer& thePlayer)
 {
@@ -15,6 +19,21 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 	mThePlayer = &thePlayer;
 	mOpponentTrainer = &opponentTrainer;
 	mMaxAbilityCost = 5;
+}
+
+void Battle::BattleUpdate()
+{
+	//
+}
+
+void Battle::BattleDraw()
+{
+	//DrawText(firstLine, 70, 775, 80, BLACK);
+	//after introduction delete
+	//mOpponentTrainer->DrawTrainer();
+	//mOppoentTrainer first and second line =  ""
+
+	//do all the draw in the trainer func. Call the draw trainer first and second line everytime ?
 }
 
 void Battle::BattleAgainstTrainer(bool firstTime)
@@ -30,9 +49,16 @@ void Battle::BattleAgainstTrainer(bool firstTime)
 		int randomPokemon = rand() % pokemonTeam.size();
 		mOpponnentPokemon = &pokemonTeam[randomPokemon];
 
-		//mOpponentTrainer->Introduction();
+		mOpponentTrainer->Introduction();
+
 		//*************** TO REFACTOR ***************************************
 		//std::cout << "He is using " << mOpponnentPokemon->GetPokemonName() << " to attack you" << endl;
+
+		//firstLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+		//DrawText(TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str()), 70, 775, 80, BLACK);
+		//mThePlayer->DrawTrainer();
+
+		return;
 
 		mUsedOpponentPokemon = *mOpponnentPokemon;
 

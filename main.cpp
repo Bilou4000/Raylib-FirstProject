@@ -85,7 +85,7 @@ void Update()
         break;
         case ATTACKTRAINER:
         {
-            //
+            firstTrainer.ChallengeTrainer(secondTrainer, firstTrainer);
         }
         break;
         case ENDING:
@@ -144,7 +144,7 @@ void Draw()
         case ATTACKTRAINER:
         {
             DrawRectangleRec(TextBox, WHITE);
-            firstTrainer.DrawTrainer(TextBox.x + 20, TextBox.y + 20, 30);
+            firstTrainer.DrawTrainer();
         }
         break;
         case ENDING:
