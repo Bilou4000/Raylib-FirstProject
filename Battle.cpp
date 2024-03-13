@@ -10,8 +10,11 @@
 const char* firstLine = "";
 const char* secondLine = "";
 const char* thirdLine = "";
+const char* toChangeLine = "";
 
-bool imageIsLoad = false;
+bool imageIsLoad = true, imageIsUnload = false;
+bool isChangingPokemon = false;
+int textNumber = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
 Image opponentPokemonImage = LoadImage("resources/white.png");
@@ -34,11 +37,34 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 
 void Battle::BattleUpdate()
 {
+	//In Choose Opponent Pokemon
+	if (textNumber == 2 && IsKeyReleased(KEY_SPACE))
+	{
+		firstLine = toChangeLine;
+		secondLine = "";
+		imageIsLoad = false;
+	}
 
+	if (textNumber == 3) 
+	{
+		firstLine = "";
+		if (!imageIsUnload) 
+		{
+			UnloadTexture(opponentPokemonTexture);
+			imageIsUnload = true;
+		}
+	}
+
+	if (IsKeyPressed(KEY_SPACE))
+	{
+		textNumber++;
+	}
 }
 
 void Battle::BattleDraw()
 {
+	mThePlayer->DrawTrainer();
+
 	DrawText(firstLine, 70, 775, 70, BLACK);
 	DrawText(secondLine, 70, 870, 70, BLACK);
 	DrawText(thirdLine, 70, 1050, 70, BLACK);
@@ -50,13 +76,18 @@ void Battle::BattleDraw()
 		imageIsLoad = true;
 	}
 
-	DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+	if (textNumber < 3) 
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+	}
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
 {
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = nullptr;
+
+	textNumber = 0;
 
 	firstLine = mOpponentTrainer->ChallengeTrainer();
 	mMaxAbilityCost = 30;
@@ -67,12 +98,13 @@ Pokemon Battle::ChooseOpponentPokemon()
 	int randomPokemon = rand() % pokemonTeam.size();
 	mOpponnentPokemon = &pokemonTeam[randomPokemon];
 
-	opponentPokemonImage = mOpponnentPokemon->GetPokemonImage();
-	imageIsLoad = false;
+	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
+
 
 	secondLine = mOpponentTrainer->Introduction();
 
-	thirdLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+	textNumber = 1;
+	toChangeLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
 }
@@ -82,10 +114,19 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = &opponentPokemon;
 
-	return;
+	//if (textNumber == 3)
+	//{
+	//	toChangeLine = (char*) TextFormat("FUCK GOD %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+	//}
 
 	//NEED TO REFACTOR SEND OR CHANGE PK
-	mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+	if (textNumber == 3) 
+	{
+		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+	}
+
+
+	return;
 
 	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 	{

@@ -220,9 +220,9 @@ string Pokemon::GetPokemonName()
 	return mName;
 }
 
-Image Pokemon::GetPokemonImage()
+Image* Pokemon::GetPokemonImage()
 {
-	return mImagePokemon;
+	return &mImagePokemon;
 }
 
 float Pokemon::GetPokemonLife()

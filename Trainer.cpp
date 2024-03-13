@@ -6,6 +6,12 @@
 #include "allPokemons.h"
 #include "Battle.h"
 
+bool isInSendPokemon = false;
+bool pokemonImageIsLoad = false;
+
+Rectangle changePokemonBox { 50 , 55, 1600 -100 , 1200 / 2 };
+//Rectangle abilityBox{ 20 , 20, 1600 / 2 , 1200 / 2 };
+
 Trainer::Trainer()
 {
 	mFirstName = "Arthur";
@@ -31,6 +37,34 @@ void Trainer::DrawTrainer()
 {
 	DrawText(mFirstLine, 70, 775, 35, BLACK);
 	DrawText(mSecondLine, 70, 775 + 60, 35, BLACK);
+
+	if (isInSendPokemon) 
+	{
+		DrawRectangleRec(changePokemonBox, WHITE);
+		float pokemonPosition = GetScreenWidth() / mPokemonTeam.size();
+
+		if (!pokemonImageIsLoad) 
+		{
+			int spacing = 0;
+			for (int i = 0; i < mPokemonTeam.size(); i++)
+			{
+				ImageFormat(mPokemonTeam[i].GetPokemonImage(), PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+				Texture2D allPokemons = LoadTextureFromImage(*(mPokemonTeam[i].GetPokemonImage()));
+				
+				//scale considering number
+				DrawTextureEx(allPokemons, { pokemonPosition - allPokemons.width, 30 }, 0, 0.8f, WHITE);
+				pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
+			}
+
+			//pokemonImageIsLoad = true;
+		}
+
+	}
+	//	if (!imageIsLoad)
+	//	{
+
+
+	//}
 }
 
 const char* Trainer::Introduction()
@@ -115,7 +149,11 @@ bool Trainer::CheckIfTeamDead()
 
 Pokemon& Trainer::SendOrChangePokemon()
 {
+	isInSendPokemon = true;
 	int pokemonIndex = 0;
+
+	Pokemon& pokemonWantingToBeUse = mPokemonTeam[0];
+	return  pokemonWantingToBeUse;
 	//int answer;
 
 	//*************** TO REFACTOR ***************************************
@@ -130,7 +168,7 @@ Pokemon& Trainer::SendOrChangePokemon()
 	//cin >> pokemonIndex;
 	//*************** TO REFACTOR ***************************************
 
-	Pokemon& pokemonWantingToBeUse = mPokemonTeam[pokemonIndex - 1];
+	//Pokemon& pokemonWantingToBeUse = mPokemonTeam[pokemonIndex - 1];
 
 	mCurrentPokemonIndex = pokemonIndex - 1;
 	return pokemonWantingToBeUse;

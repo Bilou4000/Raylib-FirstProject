@@ -31,7 +31,7 @@ public:
 
 	const vector<Ability>& GetAbilities();
 	string GetPokemonName();
-	Image GetPokemonImage();
+	Image* GetPokemonImage();
 	float GetPokemonLife();
 	float GetPokemonMaxLife();
 	float GetPokemonDamage();

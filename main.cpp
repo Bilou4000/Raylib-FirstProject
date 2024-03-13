@@ -12,8 +12,8 @@ typedef enum GameScreen { MENU, START, STROLL, ATTACKPOKEMON, ATTACKTRAINER, END
 GameScreen currentScreen;
 
 //Screen
-int screenWidth = 1600;
-int screenHeight = 1200;
+int screenWidth = 1600; //1600
+int screenHeight = 1200; //1200
 
 //text Box
 Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
@@ -55,6 +55,7 @@ int main()
 
 void Load() 
 {
+    SetConfigFlags(FLAG_WINDOW_RESIZABLE);
     InitWindow(screenWidth, screenHeight, "RAYLIB PROJECT");
     currentScreen = MENU;
     SetTargetFPS(60);
@@ -97,6 +98,7 @@ void Update()
             }
 
             theBattle.BattleAgainstTrainer(opponentPokemon);
+            theBattle.BattleUpdate();
         }
         break;
         case ENDING:
