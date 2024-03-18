@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <string>
 
 #include "raylib.h"
 #include "Trainer.h"
@@ -40,18 +41,20 @@ void Trainer::UpdateTrainer()
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), answerBox))
 		{
-			mouseOnText = true;
+			if (IsMouseButtonPressed(0))
+			{
+				mouseOnText = true;
+			}
 		}
 
 		if (mouseOnText && GetKeyPressed())
 		{
 			key = GetCharPressed();
-			//cout << (char) key << endl;
 		}
 
-		if (IsKeyPressed(KEY_ENTER) && key != NULL)
+		if (IsKeyPressed(KEY_ENTER) && answer > 0 && answer <= mPokemonTeam.size())
 		{
-			answer = key;
+			cout << answer << endl;
 		}
 
 	}
@@ -71,12 +74,15 @@ void Trainer::DrawTrainer()
 		{
 			if (isdigit(key))
 			{
-				const char please = (char)key;
-				cout << (char) please << endl;
+				string printAnswer { (char)key };
+				DrawText(TextFormat("%s", printAnswer.c_str()), 970, 1050, 50, BLACK);
 
-				DrawText(TextFormat("%s", please.c_str()), 950, 1050, 50, WHITE);
+				answer = stoi(printAnswer);
 			}
-
+			else
+			{
+				DrawText("_", 970, 1050, 50, BLACK);
+			}
 		}
 
 		float pokemonPosition = 50;
