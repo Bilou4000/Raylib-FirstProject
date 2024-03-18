@@ -13,7 +13,7 @@ bool mouseOnText = false;
 
 int key = NULL;
 int answer = NULL;
-int answerToSave;
+int answerToSave = NULL;
 
 Rectangle changePokemonBox { 0 , 55, 1600, 1200 / 2 };
 Rectangle answerBox { 1300, 860, 80, 70 };
@@ -195,28 +195,15 @@ bool Trainer::CheckIfTeamDead()
 Pokemon& Trainer::SendOrChangePokemon()
 {
 	isInSendPokemon = true;
-	int pokemonIndex = 0;
 
-	Pokemon& pokemonWantingToBeUse = mPokemonTeam[0];
-	return  pokemonWantingToBeUse;
-	//int answer;
+	if (answerToSave > 0 && answerToSave <= mPokemonTeam.size())
+	{
+		Pokemon& pokemonWantingToBeUse = mPokemonTeam[answerToSave - 1];
+		mCurrentPokemonIndex = answerToSave - 1;
 
-	//*************** TO REFACTOR ***************************************
-	//cout << "\nYou have this Pokemon team, please choose one to use" << endl;
-	//for (int i = 1; i < mPokemonTeam.size() + 1; i++)
-	//{
-	//	//add type ?
-	//	cout << i << ". " << mPokemonTeam[i - 1].GetPokemonName() << endl;
-	//}
-
-	//cout << "Which Pokemon do you want to use ? (write the corresponding number) : " << endl;
-	//cin >> pokemonIndex;
-	//*************** TO REFACTOR ***************************************
-
-	//Pokemon& pokemonWantingToBeUse = mPokemonTeam[pokemonIndex - 1];
-
-	mCurrentPokemonIndex = pokemonIndex - 1;
-	return pokemonWantingToBeUse;
+		isInSendPokemon = false;
+		return pokemonWantingToBeUse;
+	}
 }
 
 void Trainer::WinFight()

@@ -39,7 +39,6 @@ void Battle::BattleUpdate()
 {
 	mThePlayer->UpdateTrainer();
 
-	//In Choose Opponent Pokemon
 	if (textNumber == 2 && IsKeyReleased(KEY_SPACE))
 	{
 		firstLine = toChangeLine;
@@ -57,7 +56,7 @@ void Battle::BattleUpdate()
 		}
 	}
 
-	if (IsKeyPressed(KEY_SPACE))
+	if (IsKeyPressed(KEY_SPACE) && textNumber != 3)
 	{
 		textNumber++;
 	}
@@ -82,6 +81,11 @@ void Battle::BattleDraw()
 	{
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 	}
+
+	//if (textNumber == 4)
+	//{
+	//	DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+	//}
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
@@ -102,7 +106,6 @@ Pokemon Battle::ChooseOpponentPokemon()
 
 	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
 
-
 	secondLine = mOpponentTrainer->Introduction();
 
 	textNumber = 1;
@@ -116,19 +119,31 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = &opponentPokemon;
 
-	//if (textNumber == 3)
-	//{
-	//	toChangeLine = (char*) TextFormat("FUCK GOD %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
-	//}
-
 	//NEED TO REFACTOR SEND OR CHANGE PK
 	if (textNumber == 3) 
 	{
-		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+		while (mPlayerPokemon == nullptr)
+		{
+			mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+		}
+		//textNumber = 4;
+		//else
+		//{
+		//	textNumber = 4;
+		//	cout << "please" << endl;
+		//}
+
+		//cout << mPlayerPokemon->GetPokemonName();
+		//cout << "please" << endl;
+	}
+
+    if (mPlayerPokemon != NULL)
+	{
+		cout << "please" << endl;
 	}
 
 
-	return;
+ 	return;
 
 	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 	{
