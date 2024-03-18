@@ -14,14 +14,15 @@ const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false;
 bool isChangingPokemon = false;
-int textNumber = 0;
+int positionInCode = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
 Image opponentPokemonImage = LoadImage("resources/white.png");
 
 Texture2D opponentPokemonTexture;
+Texture2D playerPokemonTexture;
 
-
+//Function
 Battle::Battle(Trainer& thePlayer)
 {
 	mThePlayer = &thePlayer;
@@ -39,14 +40,14 @@ void Battle::BattleUpdate()
 {
 	mThePlayer->UpdateTrainer();
 
-	if (textNumber == 2 && IsKeyReleased(KEY_SPACE))
+	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
 	{
 		firstLine = toChangeLine;
 		secondLine = "";
 		imageIsLoad = false;
 	}
 
-	if (textNumber == 3) 
+	if (positionInCode == 3)
 	{
 		firstLine = "";
 		if (!imageIsUnload) 
@@ -56,9 +57,14 @@ void Battle::BattleUpdate()
 		}
 	}
 
-	if (IsKeyPressed(KEY_SPACE) && textNumber != 3)
+	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4)
 	{
-		textNumber++;
+		positionInCode++;
+	}
+
+	if (mThePlayer->GetAnswer() > 0 && positionInCode == 3)
+	{
+		positionInCode = 4;
 	}
 }
 
@@ -73,19 +79,30 @@ void Battle::BattleDraw()
 	if (!imageIsLoad)
 	{
 		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
 		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
+		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
+
 		imageIsLoad = true;
 	}
 
-	if (textNumber < 3) 
+	if (positionInCode < 3)
 	{
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 	}
 
-	//if (textNumber == 4)
-	//{
-	//	DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
-	//}
+	if (positionInCode == 4)
+	{
+		imageIsLoad = false;
+	}
+
+	if (positionInCode == 5)
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
+		firstLine = "";
+	}
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
@@ -93,7 +110,7 @@ Pokemon Battle::ChooseOpponentPokemon()
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = nullptr;
 
-	textNumber = 0;
+	positionInCode = 0;
 
 	firstLine = mOpponentTrainer->ChallengeTrainer();
 	mMaxAbilityCost = 30;
@@ -108,7 +125,7 @@ Pokemon Battle::ChooseOpponentPokemon()
 
 	secondLine = mOpponentTrainer->Introduction();
 
-	textNumber = 1;
+	positionInCode = 1;
 	toChangeLine = (char*) TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
@@ -119,29 +136,17 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	Pokemon* mPlayerPokemon = nullptr;
 	Pokemon* mOpponnentPokemon = &opponentPokemon;
 
-	//NEED TO REFACTOR SEND OR CHANGE PK
-	if (textNumber == 3) 
+	if (positionInCode == 3)
 	{
-		while (mPlayerPokemon == nullptr)
-		{
-			mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-		}
-		//textNumber = 4;
-		//else
-		//{
-		//	textNumber = 4;
-		//	cout << "please" << endl;
-		//}
-
-		//cout << mPlayerPokemon->GetPokemonName();
-		//cout << "please" << endl;
+		mThePlayer->ChoosePokemonToUse();
 	}
 
-    if (mPlayerPokemon != NULL)
+	if (positionInCode == 4)
 	{
-		cout << "please" << endl;
+		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+		playerPokemonImage = *(mPlayerPokemon->GetPokemonImage());
+		positionInCode = 5;
 	}
-
 
  	return;
 

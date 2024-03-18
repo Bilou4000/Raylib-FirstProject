@@ -13,7 +13,6 @@ bool mouseOnText = false;
 
 int key = NULL;
 int answer = NULL;
-int answerToSave = NULL;
 
 Rectangle changePokemonBox { 0 , 55, 1600, 1200 / 2 };
 Rectangle answerBox { 1300, 860, 80, 70 };
@@ -56,7 +55,7 @@ void Trainer::UpdateTrainer()
 
 		if (IsKeyPressed(KEY_ENTER) && answer > 0 && answer <= mPokemonTeam.size())
 		{
-			answerToSave = answer;
+			mAnswer = answer;
 		}
 
 	}
@@ -194,16 +193,21 @@ bool Trainer::CheckIfTeamDead()
 
 Pokemon& Trainer::SendOrChangePokemon()
 {
+	Pokemon& pokemonWantingToBeUse = mPokemonTeam[mAnswer - 1];
+	mCurrentPokemonIndex = mAnswer - 1;
+
+	isInSendPokemon = false;
+	return pokemonWantingToBeUse;
+}
+
+void Trainer::ChoosePokemonToUse()
+{
 	isInSendPokemon = true;
+}
 
-	if (answerToSave > 0 && answerToSave <= mPokemonTeam.size())
-	{
-		Pokemon& pokemonWantingToBeUse = mPokemonTeam[answerToSave - 1];
-		mCurrentPokemonIndex = answerToSave - 1;
-
-		isInSendPokemon = false;
-		return pokemonWantingToBeUse;
-	}
+int Trainer::GetAnswer()
+{
+	return mAnswer;
 }
 
 void Trainer::WinFight()
