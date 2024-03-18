@@ -8,8 +8,12 @@
 
 bool isInSendPokemon = false;
 bool pokemonImageIsLoad = false;
+bool mouseOnText = false;
+int key = NULL;
+int answer = NULL;
 
 Rectangle changePokemonBox { 0 , 55, 1600, 800 / 2 };
+Rectangle answerBox { 950, 1050, 70, 50 };
 //Rectangle abilityBox{ 20 , 20, 1600 / 2 , 1200 / 2 };
 
 vector<Texture2D> allPokemonsTexture;
@@ -32,7 +36,25 @@ Trainer::Trainer(string firstName, string lastName, string CatchPhrase, vector<P
 
 void Trainer::UpdateTrainer()
 {
-	//
+	if (isInSendPokemon)
+	{
+		if (CheckCollisionPointRec(GetMousePosition(), answerBox))
+		{
+			mouseOnText = true;
+		}
+
+		if (mouseOnText && GetKeyPressed())
+		{
+			key = GetCharPressed();
+			//cout << (char) key << endl;
+		}
+
+		if (IsKeyPressed(KEY_ENTER) && key != NULL)
+		{
+			answer = key;
+		}
+
+	}
 }
 
 void Trainer::DrawTrainer()
@@ -43,6 +65,19 @@ void Trainer::DrawTrainer()
 		DrawText("You have this pokemon team :", 70, 775, 70, BLACK);
 		DrawText("Which Pokemon do you want to use ? ", 70, 950, 50, BLACK);
 		DrawText("Write the corresponding number :", 70, 1050, 50, RED);
+		DrawRectangleRec(answerBox, LIGHTGRAY);
+
+		if (mouseOnText)
+		{
+			if (isdigit(key))
+			{
+				const char please = (char)key;
+				cout << (char) please << endl;
+
+				DrawText(TextFormat("%s", please.c_str()), 950, 1050, 50, WHITE);
+			}
+
+		}
 
 		float pokemonPosition = 50;
 		float pokemonNamePosition = 70;
