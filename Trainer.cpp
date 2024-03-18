@@ -10,11 +10,13 @@
 bool isInSendPokemon = false;
 bool pokemonImageIsLoad = false;
 bool mouseOnText = false;
+
 int key = NULL;
 int answer = NULL;
+int answerToSave;
 
-Rectangle changePokemonBox { 0 , 55, 1600, 800 / 2 };
-Rectangle answerBox { 950, 1050, 70, 50 };
+Rectangle changePokemonBox { 0 , 55, 1600, 1200 / 2 };
+Rectangle answerBox { 1300, 860, 80, 70 };
 //Rectangle abilityBox{ 20 , 20, 1600 / 2 , 1200 / 2 };
 
 vector<Texture2D> allPokemonsTexture;
@@ -54,7 +56,7 @@ void Trainer::UpdateTrainer()
 
 		if (IsKeyPressed(KEY_ENTER) && answer > 0 && answer <= mPokemonTeam.size())
 		{
-			cout << answer << endl;
+			answerToSave = answer;
 		}
 
 	}
@@ -65,9 +67,9 @@ void Trainer::DrawTrainer()
 	if (isInSendPokemon) 
 	{
 		DrawRectangleRec(changePokemonBox, WHITE);
-		DrawText("You have this pokemon team :", 70, 775, 70, BLACK);
-		DrawText("Which Pokemon do you want to use ? ", 70, 950, 50, BLACK);
-		DrawText("Write the corresponding number :", 70, 1050, 50, RED);
+		DrawText("You have this pokemon team :", 70, 125, 70, BLACK);
+		DrawText("Which Pokemon do you want to use ? ", 70, 775, 70, BLACK);
+		DrawText("Write the corresponding number :", 70, 870, 70, RED);
 		DrawRectangleRec(answerBox, LIGHTGRAY);
 
 		if (mouseOnText)
@@ -75,13 +77,13 @@ void Trainer::DrawTrainer()
 			if (isdigit(key))
 			{
 				string printAnswer { (char)key };
-				DrawText(TextFormat("%s", printAnswer.c_str()), 970, 1050, 50, BLACK);
+				DrawText(TextFormat("%s", printAnswer.c_str()), 1320, 870, 70, BLACK);
 
 				answer = stoi(printAnswer);
 			}
 			else
 			{
-				DrawText("_", 970, 1050, 50, BLACK);
+				DrawText("_", 1320, 870, 70, BLACK);
 			}
 		}
 
@@ -103,14 +105,9 @@ void Trainer::DrawTrainer()
 
 		for (int i = 0; i < mPokemonTeam.size(); i++)
 		{
-			DrawTextureEx(allPokemonsTexture[i], {pokemonPosition, 100}, 0, 0.6f, WHITE);
+			DrawTextureEx(allPokemonsTexture[i], {pokemonPosition, 250}, 0, 0.6f, WHITE);
+			DrawText(TextFormat("%i. %s ", i + 1, mPokemonTeam[i].GetPokemonName().c_str()), pokemonPosition, 550, 35, BLACK);
 			pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
-		}
-
-		for (int i = 0; i < mPokemonTeam.size(); i++)
-		{
-			DrawText(TextFormat("%i. %s ", i + 1, mPokemonTeam[i].GetPokemonName().c_str()), pokemonNamePosition, 870, 35, BLACK);
-			pokemonNamePosition += 250;
 		}
 	}
 }
