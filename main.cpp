@@ -19,7 +19,7 @@ int screenHeight = 1200; //1200
 Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
-vector<Pokemon> firstTeam = { Minun, Pansage, Vanillite };
+vector<Pokemon> firstTeam = { Pansage, Minun, Vanillite, Snorlax, Magikarp, Pancham };
 vector<Pokemon> secondTeam = { Magikarp, Snorlax };
 
 Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);

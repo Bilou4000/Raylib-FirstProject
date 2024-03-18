@@ -37,6 +37,8 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 
 void Battle::BattleUpdate()
 {
+	mThePlayer->UpdateTrainer();
+
 	//In Choose Opponent Pokemon
 	if (textNumber == 2 && IsKeyReleased(KEY_SPACE))
 	{

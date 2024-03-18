@@ -20,10 +20,6 @@ private:
 	int mPokeballs = 10;
 	int mCurrentPokemonIndex = 0;
 
-	const char* mFirstLine = "";
-	const char* mSecondLine = "";
-
-
 public:
 	Trainer();
 	Trainer(string firstName, string lastName, string CatchPhrase, vector<Pokemon> PokemonTeam);
@@ -33,7 +29,6 @@ public:
 
 	const char* Introduction();
 	const char* ChallengeTrainer();
-	//const char* ChallengePokemon();
 	bool IsPokemonCaptured(Pokemon& pokemon);
 	Pokemon& SendOrChangePokemon();
 	void WinFight();

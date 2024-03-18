@@ -9,8 +9,10 @@
 bool isInSendPokemon = false;
 bool pokemonImageIsLoad = false;
 
-Rectangle changePokemonBox { 50 , 55, 1600 -100 , 1200 / 2 };
+Rectangle changePokemonBox { 0 , 55, 1600, 800 / 2 };
 //Rectangle abilityBox{ 20 , 20, 1600 / 2 , 1200 / 2 };
+
+vector<Texture2D> allPokemonsTexture;
 
 Trainer::Trainer()
 {
@@ -35,13 +37,15 @@ void Trainer::UpdateTrainer()
 
 void Trainer::DrawTrainer()
 {
-	DrawText(mFirstLine, 70, 775, 35, BLACK);
-	DrawText(mSecondLine, 70, 775 + 60, 35, BLACK);
-
 	if (isInSendPokemon) 
 	{
 		DrawRectangleRec(changePokemonBox, WHITE);
-		float pokemonPosition = GetScreenWidth() / mPokemonTeam.size();
+		DrawText("You have this pokemon team :", 70, 775, 70, BLACK);
+		DrawText("Which Pokemon do you want to use ? ", 70, 950, 50, BLACK);
+		DrawText("Write the corresponding number :", 70, 1050, 50, RED);
+
+		float pokemonPosition = 50;
+		float pokemonNamePosition = 70;
 
 		if (!pokemonImageIsLoad) 
 		{
@@ -49,22 +53,25 @@ void Trainer::DrawTrainer()
 			for (int i = 0; i < mPokemonTeam.size(); i++)
 			{
 				ImageFormat(mPokemonTeam[i].GetPokemonImage(), PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-				Texture2D allPokemons = LoadTextureFromImage(*(mPokemonTeam[i].GetPokemonImage()));
+				Texture2D onePokemonTexture = LoadTextureFromImage(*(mPokemonTeam[i].GetPokemonImage()));
 				
-				//scale considering number
-				DrawTextureEx(allPokemons, { pokemonPosition - allPokemons.width, 30 }, 0, 0.8f, WHITE);
-				pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
+				allPokemonsTexture.push_back(onePokemonTexture);
 			}
-
-			//pokemonImageIsLoad = true;
+			pokemonImageIsLoad = true;
 		}
 
+		for (int i = 0; i < mPokemonTeam.size(); i++)
+		{
+			DrawTextureEx(allPokemonsTexture[i], {pokemonPosition, 100}, 0, 0.6f, WHITE);
+			pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
+		}
+
+		for (int i = 0; i < mPokemonTeam.size(); i++)
+		{
+			DrawText(TextFormat("%i. %s ", i + 1, mPokemonTeam[i].GetPokemonName().c_str()), pokemonNamePosition, 870, 35, BLACK);
+			pokemonNamePosition += 250;
+		}
 	}
-	//	if (!imageIsLoad)
-	//	{
-
-
-	//}
 }
 
 const char* Trainer::Introduction()
