@@ -127,7 +127,6 @@ const char* Trainer::ChallengeTrainer()
 // 
 //const char* Trainer::ChallengePokemon()
 //{
-//	(char*) TextFormat("You are challenging %s %s !!!", mFirstName.c_str(), mLastName.c_str());
 //	//*************** TO REFACTOR ***************************************
 //	cout << "\nYou just found a wild pokemon !!" << endl;
 //
