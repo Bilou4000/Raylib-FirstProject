@@ -7,8 +7,9 @@ using namespace std;
 #include "allAbilities.h"
 
 //Variables
-string textToShow = "";
 bool canUseSkill = false;
+Rectangle abilityBox { 1000, 550, 500, 500 };
+Rectangle contourAbilityBox { 985, 535, 530, 530 };
 
 Pokemon::Pokemon()
 {
@@ -33,80 +34,81 @@ Pokemon::Pokemon(Image imagePokemon, string name, string description, PokeType t
 	mAbilities = abilitie;
 }
 
-void Pokemon::Update()
+void Pokemon::UpdatePokemon()
 {
 	//load image and pos of pokemon
 }
 
-void Pokemon::Draw()
+void Pokemon::DrawPokemon()
 {
-	//box dialogue
-	// Maybe not text dialogue, just the text itlsef
-	// not sure about this
-	//center text in middle of box
 	if (canUseSkill)
 	{
-		//Show all possible abilities
-		DrawText(textToShow.c_str(), 680, 200, 80, BLACK);
+		DrawRectangleRec(contourAbilityBox, BLACK);
+		DrawRectangleRec(abilityBox, WHITE);
+
+		float abilityPos = 600;
+		for (int i = 0; i < mAbilities.size(); i++)
+		{
+			DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
+			//print damage or poketype - or both
+			abilityPos += 100;
+		}
 	}
 }
 
-//UNLOAD -- image of pk
-
-bool Pokemon::AttackOtherPokemon(Pokemon& pokemon)
+bool Pokemon::CheckIfCanUseAbility()
 {
-	canUseSkill = false;
-
 	for (int i = 0; i < mAbilities.size(); i++)
 	{
 		if (mAbilities[i].GetTurnUse() > 0)
 		{
 			canUseSkill = true;
-			break;
-		}
-	}
-
-	if (canUseSkill)
-	{
-		int skill = 0;
-
-		//*************** TO REFACTOR ***************************************
-		//textToShow =  "You have all this abilities : ";
-
-		//for (int i = 1; i < mAbilities.size() + 1; i++)
-		//{
-		//	//add type ?
-		//	//can't cout
-		//	cout << i << ". " << mAbilities[i - 1].GetName() << endl;
-		//}
-
-		//cout << "Which ability do you want to use ? (write the corresponding number) : " << endl;
-		//cin >> skill;
-
-		//*************** TO REFACTOR ***************************************
-
-		Ability* abilityBeingUsed = &mAbilities[skill - 1];
-
-		if (abilityBeingUsed->GetTurnUse() > 0)
-		{
-			pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
-
-			abilityBeingUsed->UseAbility();
-
-			//*************** TO REFACTOR ***************************************
-			//textToShow = "Your Pokemon(" << mName << ") used " << abilityBeingUsed->GetName() << ", it did " << pokemon.mDamageResistance;
-
 			return true;
 		}
+	}
+	return false;
+}
 
-		textToShow = "You don't have enough turn point to use that ability";
-		//to put on top
-		//textToShow = "Please use an other one : ";
-		return AttackOtherPokemon(pokemon);
+
+void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
+{
+	canUseSkill = true;
+	return; //TO ERASE
+	int skill = 0;
+
+	//*************** TO REFACTOR ***************************************
+	//textToShow =  "You have all this abilities : ";
+
+	//for (int i = 1; i < mAbilities.size() + 1; i++)
+	//{
+	//	//add type ?
+	//	//can't cout
+	//	cout << i << ". " << mAbilities[i - 1].GetName() << endl;
+	//}
+
+	//cout << "Which ability do you want to use ? (write the corresponding number) : " << endl;
+	//cin >> skill;
+
+	//*************** TO REFACTOR ***************************************
+
+	Ability* abilityBeingUsed = &mAbilities[skill - 1];
+
+	if (abilityBeingUsed->GetTurnUse() > 0)
+	{
+		pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
+
+		abilityBeingUsed->UseAbility();
+
+		//*************** TO REFACTOR ***************************************
+		//textToShow = "Your Pokemon(" << mName << ") used " << abilityBeingUsed->GetName() << ", it did " << pokemon.mDamageResistance;
+
+		return;
 	}
 
-	textToShow = "Your pokemon can't use any more skill, please change it ";
-	return false;
+	//textToShow = "You don't have enough turn point to use that ability";
+	//to put on top
+	//textToShow = "Please use an other one : ";
+	return;  //AttackOtherPokemon(pokemon);
 }
 
 void Pokemon::TakeDamage(int damage, Ability abilityAttack)
@@ -180,7 +182,7 @@ void Pokemon::LearnNewAbilities()
 	{
 		if (abilities.GetName() == wantedAbilityName)
 		{
-			textToShow =  "You already have this ability, please choose an other one ";
+			//textToShow =  "You already have this ability, please choose an other one ";
 			haveAbility = true;
 			LearnNewAbilities();
 			break;

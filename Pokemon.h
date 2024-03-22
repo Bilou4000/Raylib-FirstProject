@@ -26,8 +26,8 @@ public:
 	Pokemon();
 	Pokemon(Image imagePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie);
 
-	void Update();
-	void Draw();
+	void UpdatePokemon();
+	void DrawPokemon();
 
 	const vector<Ability>& GetAbilities();
 	string GetPokemonName();
@@ -39,7 +39,8 @@ public:
 	void TakeDamage(int damage, Ability abilityAttack);
 	void Rest();
 
-	bool AttackOtherPokemon(Pokemon& pokemon);
+	bool CheckIfCanUseAbility();
+	void AttackOtherPokemon(Pokemon& pokemon);
 	void LearnNewAbilities();
 
 	void GetDescription();

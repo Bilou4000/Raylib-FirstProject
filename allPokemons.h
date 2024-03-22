@@ -8,7 +8,7 @@
 using namespace std;
 
 static Pokemon Snorlax = Pokemon(LoadImage("resources/Ronflex.png"), "Snorlax", 
-	" is only capable of sleeping", PokeType::Normal, 169, {BodySlam});
+	" is only capable of sleeping", PokeType::Normal, 169, { BodySlam });
 static Pokemon Darumaka = Pokemon(LoadImage("resources/Darumaka.png"), "Darumaka",
 	" is a symbol of Goodluck", PokeType::Fire, 70, { FireSpin });
 static Pokemon Magikarp = Pokemon(LoadImage("resources/Magikarp.png"), "Magikarp",

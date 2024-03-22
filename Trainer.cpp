@@ -16,7 +16,6 @@ int answer = NULL;
 
 Rectangle changePokemonBox { 0 , 55, 1600, 1200 / 2 };
 Rectangle answerBox { 1300, 860, 80, 70 };
-//Rectangle abilityBox{ 20 , 20, 1600 / 2 , 1200 / 2 };
 
 vector<Texture2D> allPokemonsTexture;
 
@@ -196,6 +195,8 @@ Pokemon& Trainer::SendOrChangePokemon()
 	mCurrentPokemonIndex = mAnswer - 1;
 
 	isInSendPokemon = false;
+	mAnswer = NULL;
+	answer = NULL;
 	return pokemonWantingToBeUse;
 }
 

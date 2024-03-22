@@ -10,8 +10,8 @@ class Battle
 	Trainer* mThePlayer;
 	Trainer* mOpponentTrainer;
 	Ability mOpponentPokemonAbility;
-	Pokemon mUsedOpponentPokemon;
-	Pokemon mDeadPlayerPokemon;
+	Pokemon* mOpponnentPokemon = nullptr;
+	Pokemon* mPlayerPokemon = nullptr;
 	int mMaxAbilityCost;
 	int mNuberOfTimeAbiityWasUsed = 0;
 
