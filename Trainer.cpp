@@ -10,6 +10,7 @@
 bool isInSendPokemon = false;
 bool pokemonImageIsLoad = false;
 bool mouseOnText = false;
+bool isPokemonDead = false;
 
 int key = NULL;
 int answer = NULL;
@@ -54,7 +55,21 @@ void Trainer::UpdateTrainer()
 
 		if (IsKeyPressed(KEY_ENTER) && answer > 0 && answer <= mPokemonTeam.size())
 		{
-			mAnswerTrainer = answer;
+			if (mPokemonTeam[answer - 1].GetPokemonLife() <= 0)
+			{
+				answer = NULL;
+				mAnswerTrainer = NULL;
+				isPokemonDead = true;
+			}
+			else
+			{
+				mAnswerTrainer = answer;
+			}
+		}
+
+		if (IsKeyPressed(KEY_SPACE) && isPokemonDead)
+		{
+			isPokemonDead = false;
 		}
 	}
 }
@@ -64,23 +79,32 @@ void Trainer::DrawTrainer()
 	if (isInSendPokemon) 
 	{
 		DrawRectangleRec(changePokemonBox, WHITE);
-		DrawText("You have this pokemon team :", 70, 125, 70, BLACK);
-		DrawText("Which Pokemon do you want to use ? ", 70, 775, 70, BLACK);
-		DrawText("Write the corresponding number :", 70, 870, 70, RED);
-		DrawRectangleRec(answerBox, LIGHTGRAY);
 
-		if (mouseOnText)
+		if (isPokemonDead)
 		{
-			if (isdigit(key))
-			{
-				string printAnswer { (char)key };
-				DrawText(TextFormat("%s", printAnswer.c_str()), 1320, 870, 70, BLACK);
+			DrawText("This pokemon is already dead, ", 70, 775, 70, BLACK);
+			DrawText("Please choose an other pokemon.", 70, 875, 70, BLACK);
+		}
+		else
+		{
+			DrawText("You have this pokemon team :", 70, 125, 70, BLACK);
+			DrawText("Which Pokemon do you want to use ? ", 70, 775, 70, BLACK);
+			DrawText("Write the corresponding number :", 70, 870, 70, RED);
+			DrawRectangleRec(answerBox, LIGHTGRAY);
 
-				answer = stoi(printAnswer);
-			}
-			else
+			if (mouseOnText)
 			{
-				DrawText("_", 1320, 870, 70, BLACK);
+				if (isdigit(key))
+				{
+					string printAnswer { (char) key };
+					DrawText(TextFormat("%s", printAnswer.c_str()), 1320, 870, 70, BLACK);
+
+					answer = stoi(printAnswer);
+				}
+				else
+				{
+					DrawText("_", 1320, 870, 70, BLACK);
+				}
 			}
 		}
 

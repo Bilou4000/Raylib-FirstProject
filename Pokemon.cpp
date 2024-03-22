@@ -60,6 +60,7 @@ void Pokemon::UpdatePokemon()
 		if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= mAbilities.size())
 		{
 			mAnswerPokemon = answerPokemon;
+			//will have to check if the ability chosen is ok to use (number of utilisation)
 		}
 	}
 }

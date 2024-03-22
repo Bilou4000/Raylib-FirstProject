@@ -8,13 +8,13 @@
 using namespace std;
 
 static Pokemon Snorlax = Pokemon(LoadImage("resources/Ronflex.png"), "Snorlax", 
-	" is only capable of sleeping", PokeType::Normal, 169, { BodySlam });
+	" is only capable of sleeping", PokeType::Normal, 0, { BodySlam }); //169 pv
 static Pokemon Darumaka = Pokemon(LoadImage("resources/Darumaka.png"), "Darumaka",
 	" is a symbol of Goodluck", PokeType::Fire, 70, { FireSpin });
 static Pokemon Magikarp = Pokemon(LoadImage("resources/Magikarp.png"), "Magikarp",
 	" is only capable of flopping around", PokeType::Water, 20, { WaterShuriken });
 static Pokemon Pansage = Pokemon(LoadImage("resources/Pansage.png"), "Pansage",
-	" is a Pokemon that dwells deep in the forest", PokeType::Grass, 60, { GigaDrain }); //50
+	" is a Pokemon that dwells deep in the forest", PokeType::Grass, 60, { GigaDrain });
 static Pokemon Minun = Pokemon(LoadImage("resources/Minun.png"), "Minun",
 	" promotes blood circulation and relieves muscular tension.", PokeType::Electric, 60, { Thunder });
 static Pokemon Plusle = Pokemon(LoadImage("resources/Plusle.png"), "Plusle",
