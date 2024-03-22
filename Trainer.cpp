@@ -54,9 +54,8 @@ void Trainer::UpdateTrainer()
 
 		if (IsKeyPressed(KEY_ENTER) && answer > 0 && answer <= mPokemonTeam.size())
 		{
-			mAnswer = answer;
+			mAnswerTrainer = answer;
 		}
-
 	}
 }
 
@@ -191,11 +190,11 @@ bool Trainer::CheckIfTeamDead()
 
 Pokemon& Trainer::SendOrChangePokemon()
 {
-	Pokemon& pokemonWantingToBeUse = mPokemonTeam[mAnswer - 1];
-	mCurrentPokemonIndex = mAnswer - 1;
+	Pokemon& pokemonWantingToBeUse = mPokemonTeam[mAnswerTrainer - 1];
+	mCurrentPokemonIndex = mAnswerTrainer - 1;
 
 	isInSendPokemon = false;
-	mAnswer = NULL;
+	mAnswerTrainer = NULL;
 	answer = NULL;
 	return pokemonWantingToBeUse;
 }
@@ -207,7 +206,7 @@ void Trainer::ChoosePokemonToUse()
 
 int Trainer::GetAnswer()
 {
-	return mAnswer;
+	return mAnswerTrainer;
 }
 
 void Trainer::WinFight()

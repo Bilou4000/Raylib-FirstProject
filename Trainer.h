@@ -20,7 +20,7 @@ private:
 	int mPokeballs = 10;
 	int mCurrentPokemonIndex = 0;
 
-	int mAnswer = NULL;
+	int mAnswerTrainer = NULL;
 
 public:
 	Trainer();

@@ -108,9 +108,12 @@ void Battle::BattleDraw()
 		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
 
 		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);
+		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);		
+	}
 
-		//firstLine = (char*) TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+	if (positionInCode == 5)
+	{
+		firstLine = (char*) TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
 	}
 
 	if (positionInCode == 6)
@@ -151,8 +154,8 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 	if (positionInCode == 3)
 	{
-		//firstLine = "";
-		//secondLine = "";
+		firstLine = "";
+		secondLine = "";
 		mThePlayer->ChoosePokemonToUse();
 	}
 
@@ -169,6 +172,8 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		{
 			if (mPlayerPokemon->CheckIfCanUseAbility())
 			{
+				pokemonCanUseAbility = true;
+
 				firstLine = "Choose an ability : ";
 
 				mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon);
@@ -193,29 +198,22 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 				// You now have : pv
 
 				mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
-				//positionInCode = 7;
 			}
 			else
 			{
-				positionInCode = 7;
-				while(positionInCode != 8)
-				{
-					firstLine = "Your pokemon can't use any more skill, ";
-					secondLine = "Please change it";
-				}
+				pokemonCanUseAbility = false;
 
-				if (positionInCode == 8)
-				{
-					positionInCode = 3;
-					return BattleAgainstTrainer(*mOpponnentPokemon);
-				}
+				firstLine = "Your pokemon can't use any more skill, ";
+				secondLine = "Please change it";
+				break;
 			}
 		}
 	}
 
-	if (pokemonCanUseAbility)
+	if (positionInCode == 7 && !pokemonCanUseAbility)
 	{
-		
+		positionInCode = 3;
+		return BattleAgainstTrainer(*mOpponnentPokemon);
 	}
 
 	return; //TO ERASE

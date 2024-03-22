@@ -1,15 +1,21 @@
 using namespace std;
 #include <algorithm>
 #include <iostream>
+#include <string>
 
 #include "raylib.h"
 #include "Pokemon.h"
 #include "allAbilities.h"
 
 //Variables
-bool canUseSkill = false;
+bool canUseSkill = false, mouseOnBox;
+
+int keyInput = NULL;
+int answerPokemon = NULL;
+
 Rectangle abilityBox { 1000, 550, 500, 500 };
 Rectangle contourAbilityBox { 985, 535, 530, 530 };
+Rectangle abilityAnswerBox { 780, 850, 80, 70 };
 
 Pokemon::Pokemon()
 {
@@ -36,7 +42,26 @@ Pokemon::Pokemon(Image imagePokemon, string name, string description, PokeType t
 
 void Pokemon::UpdatePokemon()
 {
-	//load image and pos of pokemon
+	if (canUseSkill)
+	{
+		if (CheckCollisionPointRec(GetMousePosition(), abilityAnswerBox))
+		{
+			if (IsMouseButtonPressed(0))
+			{
+				mouseOnBox = true;
+			}
+		}
+
+		if (mouseOnBox && GetKeyPressed())
+		{
+			keyInput = GetCharPressed();
+		}
+
+		if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= mAbilities.size())
+		{
+			mAnswerPokemon = answerPokemon;
+		}
+	}
 }
 
 void Pokemon::DrawPokemon()
@@ -45,6 +70,8 @@ void Pokemon::DrawPokemon()
 	{
 		DrawRectangleRec(contourAbilityBox, BLACK);
 		DrawRectangleRec(abilityBox, WHITE);
+		DrawText("Write the corresponding number :", 70, 870, 40, RED);
+		DrawRectangleRec(abilityAnswerBox, LIGHTGRAY);
 
 		float abilityPos = 600;
 		for (int i = 0; i < mAbilities.size(); i++)
@@ -52,6 +79,21 @@ void Pokemon::DrawPokemon()
 			DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
 			//print damage or poketype - or both
 			abilityPos += 100;
+		}
+
+		if (mouseOnBox)
+		{
+			if (isdigit(keyInput))
+			{
+				string printAnswer { (char) keyInput };
+				DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
+
+				answerPokemon = stoi(printAnswer);
+			}
+			else
+			{
+				DrawText("_", 800, 855, 70, BLACK);
+			}
 		}
 	}
 }
@@ -72,7 +114,7 @@ bool Pokemon::CheckIfCanUseAbility()
 
 void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 {
-	canUseSkill = true;
+	//canUseSkill = true;
 	return; //TO ERASE
 	int skill = 0;
 

@@ -21,6 +21,7 @@ private:
 	float mDamageResistance;
 	vector<Ability> mAbilities;
 
+	int mAnswerPokemon = NULL;
 
 public:
 	Pokemon();
