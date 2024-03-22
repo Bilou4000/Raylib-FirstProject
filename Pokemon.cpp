@@ -158,10 +158,11 @@ void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 	pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
 	abilityBeingUsed->UseAbility();
 
-	pokemonHasDoneDamage = true;
+	//doesn't work
+	//pokemonHasDoneDamage = true;
 
-	damageText = TextFormat("Your Pokemon % s used % s, it did% i damage to% s ",mName.c_str(), abilityBeingUsed->GetName().c_str(),
-		pokemon.mDamageResistance, pokemon.GetPokemonName().c_str());
+	//damageText = TextFormat("Your Pokemon % s used % s, it did% i damage to% s ",mName.c_str(), abilityBeingUsed->GetName().c_str(),
+	//	pokemon.mDamageResistance, pokemon.GetPokemonName().c_str());
 
 	canUseSkill = false;
 

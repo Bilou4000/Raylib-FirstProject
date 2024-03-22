@@ -123,20 +123,6 @@ void Battle::BattleDraw()
 	{
 		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
 	}
-
-	if (positionInCode == 6)
-	{
-		if (pokemonCanUseAbility)
-		{
-			firstLine = "";
-			secondLine = "";
-		}
-		else
-		{
-			firstLine = "Your pokemon can't use any more skill, ";
-			secondLine = "Please change it.";
-		}
-	}
 }
 
 Pokemon Battle::ChooseOpponentPokemon()
@@ -188,11 +174,17 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		{
 			if (mPlayerPokemon->CheckIfCanUseAbility())
 			{
+				firstLine = "";
+				secondLine = "";
+
 				pokemonCanUseAbility = true;
 			}
 			else
 			{
 				pokemonCanUseAbility = false;
+
+				firstLine = "Your pokemon can't use any more skill, ";
+				secondLine = "Please change it.";
 			}
 		}
 	}
