@@ -8,7 +8,7 @@ using namespace std;
 #include "allAbilities.h"
 
 //Variables
-bool canUseSkill = false, mouseOnBox;
+bool canUseSkill = false, mouseOnBox, canAbilityBeUse = true;
 
 int keyInput = NULL;
 int answerPokemon = NULL;
@@ -59,8 +59,22 @@ void Pokemon::UpdatePokemon()
 
 		if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= mAbilities.size())
 		{
-			mAnswerPokemon = answerPokemon;
-			//will have to check if the ability chosen is ok to use (number of utilisation)
+			if (mAbilities[answerPokemon - 1].GetTurnUse() <= 0)
+			{
+				answerPokemon = NULL;
+				mAnswerPokemon = NULL;
+				canAbilityBeUse = false;
+			}
+			else
+			{
+				mAnswerPokemon = answerPokemon;
+				cout << mAnswerPokemon << endl;
+			}
+		}
+
+		if (IsKeyPressed(KEY_SPACE) && !canAbilityBeUse)
+		{
+			canAbilityBeUse = true;
 		}
 	}
 }
@@ -71,8 +85,35 @@ void Pokemon::DrawPokemon()
 	{
 		DrawRectangleRec(contourAbilityBox, BLACK);
 		DrawRectangleRec(abilityBox, WHITE);
-		DrawText("Write the corresponding number :", 70, 870, 40, RED);
-		DrawRectangleRec(abilityAnswerBox, LIGHTGRAY);
+
+		if (!canAbilityBeUse)
+		{
+			DrawText("NOT enough turn point to use that ability ", 70, 785, 40, BLACK);
+			DrawText("Please use an other one.", 70, 860, 60, BLACK);
+		}
+		else
+		{
+			DrawText("Choose an ability : ", 70, 775, 70, BLACK);
+			DrawText("Write the corresponding number :", 70, 870, 40, RED);
+			DrawRectangleRec(abilityAnswerBox, LIGHTGRAY);
+
+			if (mouseOnBox)
+			{
+				if (isdigit(keyInput))
+				{
+					string printAnswer { (char) keyInput };
+					DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
+
+					answerPokemon = stoi(printAnswer);
+				}
+				else
+				{
+					DrawText("_", 800, 855, 70, BLACK);
+				}
+			}
+		}
+
+
 
 		float abilityPos = 600;
 		for (int i = 0; i < mAbilities.size(); i++)
@@ -80,21 +121,6 @@ void Pokemon::DrawPokemon()
 			DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
 			//print damage or poketype - or both
 			abilityPos += 100;
-		}
-
-		if (mouseOnBox)
-		{
-			if (isdigit(keyInput))
-			{
-				string printAnswer { (char) keyInput };
-				DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
-
-				answerPokemon = stoi(printAnswer);
-			}
-			else
-			{
-				DrawText("_", 800, 855, 70, BLACK);
-			}
 		}
 	}
 }
@@ -115,43 +141,17 @@ bool Pokemon::CheckIfCanUseAbility()
 
 void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 {
-	//canUseSkill = true;
-	return; //TO ERASE
-	int skill = 0;
+	Ability* abilityBeingUsed = &mAbilities[mAnswerPokemon - 1];
+
+	pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
+	abilityBeingUsed->UseAbility();
 
 	//*************** TO REFACTOR ***************************************
-	//textToShow =  "You have all this abilities : ";
-
-	//for (int i = 1; i < mAbilities.size() + 1; i++)
-	//{
-	//	//add type ?
-	//	//can't cout
-	//	cout << i << ". " << mAbilities[i - 1].GetName() << endl;
-	//}
-
-	//cout << "Which ability do you want to use ? (write the corresponding number) : " << endl;
-	//cin >> skill;
-
-	//*************** TO REFACTOR ***************************************
-
-	Ability* abilityBeingUsed = &mAbilities[skill - 1];
-
-	if (abilityBeingUsed->GetTurnUse() > 0)
-	{
-		pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
-
-		abilityBeingUsed->UseAbility();
-
-		//*************** TO REFACTOR ***************************************
-		//textToShow = "Your Pokemon(" << mName << ") used " << abilityBeingUsed->GetName() << ", it did " << pokemon.mDamageResistance;
-
-		return;
-	}
-
-	//textToShow = "You don't have enough turn point to use that ability";
-	//to put on top
-	//textToShow = "Please use an other one : ";
-	return;  //AttackOtherPokemon(pokemon);
+	//textToShow = "Your Pokemon(" << mName << ") used " << abilityBeingUsed->GetName() << ", it did " << pokemon.mDamageResistance;
+	canUseSkill = false;
+	mAnswerPokemon = NULL;
+	answerPokemon = NULL;
+	return;
 }
 
 void Pokemon::TakeDamage(int damage, Ability abilityAttack)
@@ -283,5 +283,10 @@ float Pokemon::GetPokemonMaxLife()
 float Pokemon::GetPokemonDamage()
 {
 	return mDamageResistance;
+}
+
+int Pokemon::GetAnswerPokemon()
+{
+	return mAnswerPokemon;
 }
 

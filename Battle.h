@@ -6,7 +6,7 @@
 
 class Battle
 {
-	private:
+private:
 	Trainer* mThePlayer;
 	Trainer* mOpponentTrainer;
 	Ability mOpponentPokemonAbility;
@@ -15,7 +15,7 @@ class Battle
 	int mMaxAbilityCost;
 	int mNuberOfTimeAbiityWasUsed = 0;
 
-	public:
+public:
 	Battle(Trainer& thePlayer);
 	Battle(Trainer& thePlayer, Trainer& opponentTrainer);
 

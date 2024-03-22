@@ -36,6 +36,7 @@ public:
 	float GetPokemonLife();
 	float GetPokemonMaxLife();
 	float GetPokemonDamage();
+	int GetAnswerPokemon();
 
 	void TakeDamage(int damage, Ability abilityAttack);
 	void Rest();

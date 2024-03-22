@@ -228,7 +228,7 @@ void Trainer::ChoosePokemonToUse()
 	isInSendPokemon = true;
 }
 
-int Trainer::GetAnswer()
+int Trainer::GetAnswerTrainer()
 {
 	return mAnswerTrainer;
 }

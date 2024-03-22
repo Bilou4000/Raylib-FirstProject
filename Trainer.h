@@ -30,7 +30,7 @@ public:
 	void DrawTrainer();
 
 	void ChoosePokemonToUse();
-	int GetAnswer();
+	int GetAnswerTrainer();
 
 	const char* Introduction();
 	const char* ChallengeTrainer();

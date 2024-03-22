@@ -13,7 +13,7 @@ const char* thirdLine = "";
 const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false;
-bool isChangingPokemon = false, pokemonCanUseAbility = false;
+bool isChangingPokemon = false, pokemonCanUseAbility = true;
 int positionInCode = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
@@ -63,9 +63,17 @@ void Battle::BattleUpdate()
 		positionInCode++;
 	}
 
-	if (mThePlayer->GetAnswer() > 0 && positionInCode == 3)
+	if (mThePlayer->GetAnswerTrainer() > 0 && positionInCode == 3)
 	{
 		positionInCode = 4;
+	}
+
+	if (positionInCode == 6)
+	{
+		if (mPlayerPokemon->GetAnswerPokemon() > 0)
+		{
+			positionInCode = 7;
+		}
 	}
 }
 
@@ -118,7 +126,16 @@ void Battle::BattleDraw()
 
 	if (positionInCode == 6)
 	{
-		//firstLine = "";
+		if (pokemonCanUseAbility)
+		{
+			firstLine = "";
+			secondLine = "";
+		}
+		else
+		{
+			firstLine = "Your pokemon can't use any more skill, ";
+			secondLine = "Please change it.";
+		}
 	}
 }
 
@@ -165,54 +182,51 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		positionInCode = 5;
 	}
 	
-	if (positionInCode >= 6)
+	if (positionInCode == 6)
 	{
-		while(mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
+		if(mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 		{
 			if (mPlayerPokemon->CheckIfCanUseAbility())
 			{
 				pokemonCanUseAbility = true;
-
-				firstLine = "Choose an ability : ";
-
-				mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon);
-				return; //TO ERASE
-				//*************** TO REFACTOR ***************************************
-				//cout << " damage to " << mOpponnentPokemon->GetPokemonName() << endl;
-				//cout << "He now has " << mOpponnentPokemon->GetPokemonLife() << " pv\n" << endl;
-
-				if (mOpponnentPokemon->GetPokemonLife() <= 0)
-				{
-					break;
-				}
-
-				srand(time(NULL));
-				const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
-				int randomAbility = rand() % abilities.size();
-				mOpponentPokemonAbility = abilities[randomAbility];
-
-				//*************** TO REFACTOR ***************************************
-				//cout << mOpponnentPokemon->GetPokemonName() << " used " << mOpponentPokemonAbility.GetName()
-				//	<< ", it does " << mOpponnentPokemon->GetPokemonDamage() << " damage to your Pokemon" << endl;
-				// You now have : pv
-
-				mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
 			}
 			else
 			{
-				firstLine = "Your pokemon can't use any more skill, ";
-				secondLine = "Please change it";
-
 				pokemonCanUseAbility = false;
-				break;
 			}
 		}
 	}
 
-	if (positionInCode == 7 && !pokemonCanUseAbility)
+ 	if (positionInCode == 7 && !pokemonCanUseAbility)
 	{
 		positionInCode = 3;
 		return BattleAgainstTrainer(*mOpponnentPokemon);
+	}
+	else if (positionInCode == 7 && pokemonCanUseAbility)
+	{
+		mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon);
+		positionInCode = 8;
+		return; //TO ERASE
+		//*************** TO REFACTOR ***************************************
+		//cout << " damage to " << mOpponnentPokemon->GetPokemonName() << endl;
+		//cout << "He now has " << mOpponnentPokemon->GetPokemonLife() << " pv\n" << endl;
+
+		//if (mOpponnentPokemon->GetPokemonLife() <= 0)
+		//{
+		//	break;
+		//}
+
+		srand(time(NULL));
+		const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
+		int randomAbility = rand() % abilities.size();
+		mOpponentPokemonAbility = abilities[randomAbility];
+
+		//*************** TO REFACTOR ***************************************
+		//cout << mOpponnentPokemon->GetPokemonName() << " used " << mOpponentPokemonAbility.GetName()
+		//	<< ", it does " << mOpponnentPokemon->GetPokemonDamage() << " damage to your Pokemon" << endl;
+		// You now have : pv
+
+		mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
 	}
 
 	return; //TO ERASE
