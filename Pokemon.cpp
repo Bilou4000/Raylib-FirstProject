@@ -8,10 +8,13 @@ using namespace std;
 #include "allAbilities.h"
 
 //Variables
-bool canUseSkill = false, mouseOnBox, canAbilityBeUse = true;
+bool mouseOnBox;
+bool canUseSkill = false, canAbilityBeUse = true, pokemonHasDoneDamage = false;
 
 int keyInput = NULL;
 int answerPokemon = NULL;
+
+const char* damageText = "";
 
 Rectangle abilityBox { 1000, 550, 500, 500 };
 Rectangle contourAbilityBox { 985, 535, 530, 530 };
@@ -77,6 +80,11 @@ void Pokemon::UpdatePokemon()
 			canAbilityBeUse = true;
 		}
 	}
+
+	if (IsKeyPressed(KEY_SPACE) && pokemonHasDoneDamage)
+	{
+		pokemonHasDoneDamage = false;
+	}
 }
 
 void Pokemon::DrawPokemon()
@@ -113,8 +121,6 @@ void Pokemon::DrawPokemon()
 			}
 		}
 
-
-
 		float abilityPos = 600;
 		for (int i = 0; i < mAbilities.size(); i++)
 		{
@@ -122,6 +128,12 @@ void Pokemon::DrawPokemon()
 			//print damage or poketype - or both
 			abilityPos += 100;
 		}
+	}
+
+	if (pokemonHasDoneDamage)
+	{
+		//DOESN'T SHOW THE RIGHT ONE
+		DrawText(damageText, 70, 775, 70, BLACK);
 	}
 }
 
@@ -146,9 +158,13 @@ void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 	pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
 	abilityBeingUsed->UseAbility();
 
-	//*************** TO REFACTOR ***************************************
-	//textToShow = "Your Pokemon(" << mName << ") used " << abilityBeingUsed->GetName() << ", it did " << pokemon.mDamageResistance;
+	pokemonHasDoneDamage = true;
+
+	damageText = TextFormat("Your Pokemon % s used % s, it did% i damage to% s ",mName.c_str(), abilityBeingUsed->GetName().c_str(),
+		pokemon.mDamageResistance, pokemon.GetPokemonName().c_str());
+
 	canUseSkill = false;
+
 	mAnswerPokemon = NULL;
 	answerPokemon = NULL;
 	return;

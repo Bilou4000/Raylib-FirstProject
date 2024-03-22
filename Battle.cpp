@@ -13,7 +13,7 @@ const char* thirdLine = "";
 const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false;
-bool isChangingPokemon = false, pokemonCanUseAbility = true;
+bool isChangingPokemon = false, pokemonCanUseAbility = false;
 int positionInCode = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
@@ -58,7 +58,7 @@ void Battle::BattleUpdate()
 		}
 	}
 
-	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4)
+ 	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && !pokemonCanUseAbility)
 	{
 		positionInCode++;
 	}
