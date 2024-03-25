@@ -20,7 +20,7 @@ Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 vector<Pokemon> firstTeam = { Pancham };
-vector<Pokemon> secondTeam = { Magikarp };
+vector<Pokemon> secondTeam = { Snorlax };
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
 
@@ -104,7 +104,7 @@ void Update()
 
             if (theBattle.EndOfBattle())
             {
-
+                currentScreen = STROLL;
             }
         }
         break;

@@ -326,7 +326,6 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 	if (positionInCode == 14 && !opponentPokemonIsDead)
 	{
-		//end
 		firstLine = "";
 		secondLine = "";
 		battleIsFinished = true;
@@ -342,7 +341,6 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 	if (positionInCode == 16)
 	{
-		//end
 		firstLine = "";
 		secondLine = "";
 		battleIsFinished = true;
