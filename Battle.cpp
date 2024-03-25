@@ -75,6 +75,11 @@ void Battle::BattleUpdate()
 			positionInCode = 7;
 		}
 	}
+
+	if (positionInCode == 13 && mPlayerPokemon->GetAnswerPokemon() > 0)
+	{
+		positionInCode = 14;
+	}
 }
 
 void Battle::BattleDraw()
@@ -122,6 +127,14 @@ void Battle::BattleDraw()
 	if (positionInCode == 5)
 	{
 		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+	}
+
+	if (positionInCode == 15)
+	{
+		const Ability& newAbility = mPlayerPokemon->GetAbilities()[mPlayerPokemon->GetAbilities().size() - 1];
+		firstLine = TextFormat("%s has now learned", mPlayerPokemon->GetPokemonName().c_str());
+		DrawText(TextFormat("%s", newAbility.GetName().c_str()), 70, 900, 90, RED);
+		return;
 	}
 }
 
@@ -297,17 +310,31 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 		pokemonIsLevelingUp = true;
 
-
 		mPlayerPokemon->ChooseAbility();
-		return; //TO ERASE
-		//mPlayerPokemon->LearnNewAbilities();
 	}
 
 
-	if (positionInCode == 14)
+	if (positionInCode == 14 && !opponentPokemonIsDead)
 	{
+		//end
 		firstLine = "";
 		secondLine = "";
+		return;
+	}
+
+	if (positionInCode == 14 && opponentPokemonIsDead)
+	{
+		mPlayerPokemon->LearnNewAbilities();
+		pokemonIsLevelingUp = false;
+		positionInCode = 15;
+	}
+
+	if (positionInCode == 16)
+	{
+		//end
+		firstLine = "";
+		secondLine = "";
+		return;
 	}
 
 	return; 

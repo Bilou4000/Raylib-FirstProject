@@ -30,22 +30,21 @@ public:
 	void UpdatePokemon();
 	void DrawPokemon();
 
-	const vector<Ability>& GetAbilities();
-	string GetPokemonName();
-	Image* GetPokemonImage();
-	float GetPokemonLife();
-	float GetPokemonMaxLife();
-	float GetPokemonDamage();
-	int GetAnswerPokemon();
-
 	void TakeDamage(int damage, Ability abilityAttack);
 	void Rest();
-
 	bool CheckIfCanUseAbility();
 	void AttackOtherPokemon(Pokemon& pokemon);
 	void ChooseAbility();
 	void LearnNewAbilities();
 
 	void GetDescription();
+
+	const vector<Ability>& GetAbilities() const;
+	string GetPokemonName() const;
+	Image* GetPokemonImage();
+	float GetPokemonLife() const;
+	float GetPokemonMaxLife() const;
+	float GetPokemonDamage() const;
+	int GetAnswerPokemon() const;
 };
 

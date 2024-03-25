@@ -30,7 +30,6 @@ public:
 	void DrawTrainer();
 
 	void ChoosePokemonToUse();
-	int GetAnswerTrainer();
 
 	const char* Introduction();
 	const char* ChallengeTrainer();
@@ -40,7 +39,8 @@ public:
 	bool WinFight();
 
 	vector<Pokemon>& GetPokemonTeam();
-	int GetMoney();
-	int GetPokeballs();
+	int GetAnswerTrainer() const;
+	int GetMoney() const;
+	int GetPokeballs() const;
 };
 

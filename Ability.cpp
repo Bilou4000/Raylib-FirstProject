@@ -18,22 +18,22 @@ Ability::Ability(string name, int damage, PokeType poketype, int numberOfUse)
 	mMaxNumberOfUse = numberOfUse;
 }
 
-int Ability::GetDamage()
+int Ability::GetDamage() const
 {
 	return mDamage;
 }
 
-int Ability::GetTurnUse()
+int Ability::GetTurnUse() const
 {
 	return mNumberOfUse;
 }
 
-string Ability::GetName()
+string Ability::GetName() const
 {
 	return mName;
 }
 
-PokeType Ability::GetPoketype()
+PokeType Ability::GetPoketype() const
 {
 	return mPoketype;
 }

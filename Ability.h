@@ -20,11 +20,13 @@ public:
 	Ability();
 	Ability(string name, int damage, PokeType poketype, int numberOfUse);
 
-	int GetDamage();
-	int GetTurnUse();
-	string GetName();
-	PokeType GetPoketype();
 	void ResetAbilityUse();
 	void UseAbility();
+
+	int GetDamage() const;
+	int GetTurnUse() const;
+	string GetName() const;
+	PokeType GetPoketype() const;
+
 };
 

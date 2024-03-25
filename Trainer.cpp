@@ -224,11 +224,6 @@ void Trainer::ChoosePokemonToUse()
 	isInSendPokemon = true;
 }
 
-int Trainer::GetAnswerTrainer()
-{
-	return mAnswerTrainer;
-}
-
 bool Trainer::WinFight()
 {
 	srand(time(NULL));
@@ -251,12 +246,17 @@ vector<Pokemon>& Trainer::GetPokemonTeam()
 	return mPokemonTeam;
 }
 
-int Trainer::GetMoney()
+int Trainer::GetAnswerTrainer() const
+{
+	return mAnswerTrainer;
+}
+
+int Trainer::GetMoney() const
 {
 	return mMoney;
 }
 
-int Trainer::GetPokeballs()
+int Trainer::GetPokeballs() const
 {
 	return mPokeballs;
 }
