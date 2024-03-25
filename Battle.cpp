@@ -13,7 +13,7 @@ const char* thirdLine = "";
 const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false;
-bool isChangingPokemon = false, pokemonCanUseAbility = false;
+bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, pokemonIsLevelingUp = false;
 int positionInCode = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
@@ -58,7 +58,7 @@ void Battle::BattleUpdate()
 		}
 	}
 
- 	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && !pokemonCanUseAbility)
+ 	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && !pokemonCanUseAbility && !pokemonIsLevelingUp)
 	{
 		positionInCode++;
 	}
@@ -84,7 +84,7 @@ void Battle::BattleDraw()
 
 	DrawText(firstLine, 70, 775, 70, BLACK);
 	DrawText(secondLine, 70, 870, 70, BLACK);
-	DrawText(thirdLine, 70, 1050, 70, BLACK);
+ 	DrawText(thirdLine, 70, 1050, 70, BLACK);
 
 	if (!imageIsLoad)
 	{
@@ -197,72 +197,118 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	else if (positionInCode == 7 && pokemonCanUseAbility)
 	{
 		mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon);
+
 		positionInCode = 8;
-		return; //TO ERASE
-		//*************** TO REFACTOR ***************************************
-		//cout << " damage to " << mOpponnentPokemon->GetPokemonName() << endl;
-		//cout << "He now has " << mOpponnentPokemon->GetPokemonLife() << " pv\n" << endl;
+	}
 
-		//if (mOpponnentPokemon->GetPokemonLife() <= 0)
-		//{
-		//	break;
-		//}
+	if (positionInCode == 8) 
+	{
+		firstLine = TextFormat("You did %i damage to %s", (int) mOpponnentPokemon->GetPokemonDamage(), mOpponnentPokemon->GetPokemonName().c_str());
+		pokemonCanUseAbility = false;
+	}
 
+	if (positionInCode == 9 && mOpponnentPokemon->GetPokemonLife() <= 0)
+	{
+		opponentPokemonIsDead = true;
+		firstLine = "YOU HAVE WON THE FIGHT !!";
+	}
+	else if (positionInCode == 9 && mOpponnentPokemon->GetPokemonLife() > 0)
+	{
 		srand(time(NULL));
 		const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
 		int randomAbility = rand() % abilities.size();
 		mOpponentPokemonAbility = abilities[randomAbility];
 
-		//*************** TO REFACTOR ***************************************
-		//cout << mOpponnentPokemon->GetPokemonName() << " used " << mOpponentPokemonAbility.GetName()
-		//	<< ", it does " << mOpponnentPokemon->GetPokemonDamage() << " damage to your Pokemon" << endl;
-		// You now have : pv
-
 		mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
+		positionInCode = 10;
 	}
 
-	return; //TO ERASE
-
-	if (mOpponnentPokemon->GetPokemonLife() <= 0)
+	if (positionInCode == 10 && !opponentPokemonIsDead)
 	{
-		//win fight check the refactor
-		mThePlayer->WinFight();
+		firstLine = TextFormat("%s did %i damage to you", mOpponnentPokemon->GetPokemonName().c_str(), ( int )mOpponnentPokemon->GetPokemonDamage());
+	}
+
+	if (positionInCode == 11 && !opponentPokemonIsDead)
+	{
+		if (mThePlayer->CheckIfTeamDead())
+		{
+			firstLine = "All your pokemons are dead";
+			secondLine = "You have lost the fight";
+
+			positionInCode = 12;
+		}
+		else
+		{
+			firstLine = "Your pokemon just died.";
+			secondLine = "Please change it";
+
+			positionInCode = 6;
+			return BattleAgainstTrainer(*mOpponnentPokemon);
+		}
+	}
+
+	if (opponentPokemonIsDead && positionInCode == 10)
+	{
+		if (mThePlayer->WinFight())
+		{
+			firstLine = "You won 100 gold";
+
+			string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
+			secondLine = temp->c_str();
+			positionInCode = 11;
+		}
+		else
+		{
+			firstLine = "You won 2 new Pokeballs";
+
+			string* temp = new string(TextFormat("you now have %i Pokeballs", mThePlayer->GetPokeballs()));
+			secondLine = temp->c_str();
+			positionInCode = 11;
+		}
 
 		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
 		{
 			mThePlayer->GetPokemonTeam()[i].Rest();
 		}
+	}
 
+	if (positionInCode == 12 && opponentPokemonIsDead)
+	{
 		if (mPlayerPokemon->GetAbilities().size() >= 4)
 		{
 			return;
 		}
 
-		//*************** TO REFACTOR ***************************************
-		cout << "\nYour Pokemon is leveling up !!! \nYou can now learn a new ability !" << endl;
-		mPlayerPokemon->LearnNewAbilities();
-		//*************** TO REFACTOR ***************************************
-
-		return;
+		firstLine = "Your Pokemon is leveling up !!!";
+		secondLine = "You can now learn a new ability";
 	}
 
-	if (mPlayerPokemon->GetPokemonLife() <= 0)
+	if (positionInCode == 13 && !opponentPokemonIsDead)
 	{
-		//*************** TO REFACTOR ***************************************
-		//cout << "\nYour pokemon has been defeated, he now has " << mPlayerPokemon->GetPokemonLife() << "pv" << endl;
+		firstLine = "You just lost 70 gold,";
 
-		if (mThePlayer->CheckIfTeamDead())
-		{
-			//you can maybe print the result here ?
-			return;
-		}
-		if (!mThePlayer->CheckIfTeamDead())
-		{
-			//mDeadPlayerPokemon = *mPlayerPokemon;
-
-			return BattleAgainstTrainer(*mOpponnentPokemon);
-		}
+		string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
+		secondLine = temp->c_str();
 	}
+	else if (positionInCode == 13 && opponentPokemonIsDead)
+	{
+		firstLine = "";
+		secondLine = "";
+
+		pokemonIsLevelingUp = true;
+
+		return; //TO ERASE
+		mPlayerPokemon->LearnNewAbilities();
+	}
+
+
+	if (positionInCode == 14)
+	{
+		firstLine = "";
+		secondLine = "";
+	}
+
+	return; 
 }
 
 

@@ -24,6 +24,7 @@ public:
 
 	Pokemon ChooseOpponentPokemon();
 	void BattleAgainstTrainer(Pokemon& opponentPokemon);
+
 	void BattleAgainstPokemon(bool firstTime);
 };
 

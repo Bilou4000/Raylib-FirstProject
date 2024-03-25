@@ -203,11 +203,7 @@ bool Trainer::CheckIfTeamDead()
 		}
 	}
 
-	mMoney -= 10;
-
-	//*************** TO REFACTOR ***************************************
-	cout << "\nAll your Pokemon are dead, you have lost the fight " << endl;
-	//cout << "You have lost 10 gold, you now have " << mMoney << " gold" << endl;
+	mMoney -= 70;
 
 	return true;
 }
@@ -233,27 +229,34 @@ int Trainer::GetAnswerTrainer()
 	return mAnswerTrainer;
 }
 
-void Trainer::WinFight()
+bool Trainer::WinFight()
 {
-	//*************** TO REFACTOR ***************************************
-	cout << "You have won the Battle !!!!! " << endl;
+	srand(time(NULL));
 	int random = rand() % 101;
+
 	if (random <= 50)
 	{
-		mMoney += 10;
-		cout << "You won 10 gold, you now have " << mMoney << " gold" << endl;
-		return;
+		mMoney += 100;
+		return true;
 	}
 	else if (random > 50)
 	{
 		mPokeballs += 2;
-		cout << "You won 2 new Pokeballs, you now have " << mPokeballs << " Pokeballs" << endl;
-		return;
+		return false;
 	}
-	//*************** TO REFACTOR ***************************************
 }
 
 vector<Pokemon>& Trainer::GetPokemonTeam()
 {
 	return mPokemonTeam;
+}
+
+int Trainer::GetMoney()
+{
+	return mMoney;
+}
+
+int Trainer::GetPokeballs()
+{
+	return mPokeballs;
 }

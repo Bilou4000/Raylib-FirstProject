@@ -80,11 +80,6 @@ void Pokemon::UpdatePokemon()
 			canAbilityBeUse = true;
 		}
 	}
-
-	if (IsKeyPressed(KEY_SPACE) && pokemonHasDoneDamage)
-	{
-		pokemonHasDoneDamage = false;
-	}
 }
 
 void Pokemon::DrawPokemon()
@@ -129,12 +124,6 @@ void Pokemon::DrawPokemon()
 			abilityPos += 100;
 		}
 	}
-
-	if (pokemonHasDoneDamage)
-	{
-		//DOESN'T SHOW THE RIGHT ONE
-		DrawText(damageText, 70, 775, 70, BLACK);
-	}
 }
 
 bool Pokemon::CheckIfCanUseAbility()
@@ -157,12 +146,6 @@ void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 
 	pokemon.TakeDamage(abilityBeingUsed->GetDamage(), *abilityBeingUsed);
 	abilityBeingUsed->UseAbility();
-
-	//doesn't work
-	//pokemonHasDoneDamage = true;
-
-	//damageText = TextFormat("Your Pokemon % s used % s, it did% i damage to% s ",mName.c_str(), abilityBeingUsed->GetName().c_str(),
-	//	pokemon.mDamageResistance, pokemon.GetPokemonName().c_str());
 
 	canUseSkill = false;
 
@@ -264,12 +247,6 @@ void Pokemon::GetDescription()
 	//*************** TO REFACTOR ***************************************
 	//cout << "\n" << mName << mDescription << " and has " << mLife << " pv " <<
 	//	"\nHis abilities are " << endl;
-
-	for (int i = 0; i < mAbilities.size(); i++)
-	{
-		//*************** TO REFACTOR ***************************************
-		//cout << mAbilities[i].GetName() << endl;
-	}
 }
 
 const vector<Ability>& Pokemon::GetAbilities()

@@ -14,7 +14,7 @@ private:
 	string mFirstName;
 	string mLastName;
 	string mCatchPhrase;
-	int mMoney;
+	int mMoney = 1000;
 	int mLifePoints = 100;
 	vector<Pokemon> mPokemonTeam;
 	int mPokeballs = 10;
@@ -35,9 +35,12 @@ public:
 	const char* Introduction();
 	const char* ChallengeTrainer();
 	bool IsPokemonCaptured(Pokemon& pokemon);
-	Pokemon& SendOrChangePokemon();
-	void WinFight();
 	bool CheckIfTeamDead();
+	Pokemon& SendOrChangePokemon();
+	bool WinFight();
+
 	vector<Pokemon>& GetPokemonTeam();
+	int GetMoney();
+	int GetPokeballs();
 };
 

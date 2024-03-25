@@ -7,7 +7,7 @@ using namespace std;
 static Ability BodySlam = Ability("BodySlam", 85, PokeType::Normal, 1);
 static Ability FireSpin = Ability("FireSpin", 35, PokeType::Fire, 3);
 static Ability WaterShuriken = Ability("WaterShuriken", 15, PokeType::Water, 5);
-static Ability GigaDrain = Ability("GigaDrain", 75, PokeType::Grass, -1); //2
+static Ability GigaDrain = Ability("GigaDrain", 75, PokeType::Grass, 2);
 static Ability Thunder = Ability("Thunder", 110, PokeType::Electric, 1);
 static Ability IcyWind = Ability("IcyWind", 55, PokeType::Ice, 2);
 static Ability RollingKick = Ability("RollingKick", 60, PokeType::Fighting, 2);
