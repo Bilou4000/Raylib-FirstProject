@@ -107,7 +107,7 @@ void Battle::BattleDraw()
 		imageIsLoad = false;
 	}
 
-	if (positionInCode >= 5)
+	if (positionInCode >= 5 && (positionInCode != 13 || !opponentPokemonIsDead))
 	{
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
@@ -297,8 +297,10 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 		pokemonIsLevelingUp = true;
 
+
+		mPlayerPokemon->ChooseAbility();
 		return; //TO ERASE
-		mPlayerPokemon->LearnNewAbilities();
+		//mPlayerPokemon->LearnNewAbilities();
 	}
 
 

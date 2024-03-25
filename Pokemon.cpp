@@ -9,7 +9,7 @@ using namespace std;
 
 //Variables
 bool mouseOnBox;
-bool canUseSkill = false, canAbilityBeUse = true, pokemonHasDoneDamage = false;
+bool canUseSkill = false, canAbilityBeUse = true, pokemonHasDoneDamage = false, isChoosingAbility = false;
 
 int keyInput = NULL;
 int answerPokemon = NULL;
@@ -19,6 +19,7 @@ const char* damageText = "";
 Rectangle abilityBox { 1000, 550, 500, 500 };
 Rectangle contourAbilityBox { 985, 535, 530, 530 };
 Rectangle abilityAnswerBox { 780, 850, 80, 70 };
+Rectangle allAbilityBox{ 0 , 55, 1600, 650 };
 
 Pokemon::Pokemon()
 {
@@ -45,7 +46,7 @@ Pokemon::Pokemon(Image imagePokemon, string name, string description, PokeType t
 
 void Pokemon::UpdatePokemon()
 {
-	if (canUseSkill)
+	if (canUseSkill || isChoosingAbility)
 	{
 		if (CheckCollisionPointRec(GetMousePosition(), abilityAnswerBox))
 		{
@@ -60,41 +61,82 @@ void Pokemon::UpdatePokemon()
 			keyInput = GetCharPressed();
 		}
 
-		if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= mAbilities.size())
+		if (canUseSkill) 
 		{
-			if (mAbilities[answerPokemon - 1].GetTurnUse() <= 0)
+			if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= mAbilities.size())
 			{
-				answerPokemon = NULL;
-				mAnswerPokemon = NULL;
-				canAbilityBeUse = false;
+				if (mAbilities[answerPokemon - 1].GetTurnUse() <= 0)
+				{
+					answerPokemon = NULL;
+					mAnswerPokemon = NULL;
+
+					canAbilityBeUse = false;
+				}
+				else
+				{
+					mouseOnBox = false;
+
+					mAnswerPokemon = answerPokemon;
+					cout << mAnswerPokemon << endl;
+				}
 			}
-			else
+
+			if (IsKeyPressed(KEY_SPACE) && !canAbilityBeUse)
 			{
-				mAnswerPokemon = answerPokemon;
-				cout << mAnswerPokemon << endl;
+				canAbilityBeUse = true;
+			}
+		}
+		else if (isChoosingAbility) 
+		{
+			//***************************************PROBLEM***************************************
+			//*************************************CAN'T WRITE 2 NUMBER***********************************************************
+			if (IsKeyPressed(KEY_ENTER) && answerPokemon > 0 && answerPokemon <= allAbility.size())
+			{
+				string wantedAbilityName = allAbility[answerPokemon - 1].GetName();
+
+				for (Ability abilities : mAbilities)
+				{
+					if (abilities.GetName() == allAbility[answerPokemon - 1].GetName())
+					{
+						answerPokemon = NULL;
+						mAnswerPokemon = NULL;
+						//********************************************NEED TO FIND A WAY TO PRINT THIS -- maybe check later, after accepting the answer***************************
+						//textToShow =  "You already have this ability, please choose an other one ";
+						break;
+					}
+					else
+					{
+						mAnswerPokemon = answerPokemon;
+						cout << mAnswerPokemon << endl;
+					}
+				}
+
 			}
 		}
 
-		if (IsKeyPressed(KEY_SPACE) && !canAbilityBeUse)
-		{
-			canAbilityBeUse = true;
-		}
 	}
 }
 
 void Pokemon::DrawPokemon()
 {
-	if (canUseSkill)
+	if (canUseSkill || isChoosingAbility)
 	{
-		DrawRectangleRec(contourAbilityBox, BLACK);
-		DrawRectangleRec(abilityBox, WHITE);
+		if (canUseSkill) 
+		{
+			DrawRectangleRec(contourAbilityBox, BLACK);
+			DrawRectangleRec(abilityBox, WHITE);
+		}
+		else if(isChoosingAbility)
+		{
+			DrawRectangleRec(allAbilityBox, WHITE);
+		}
 
-		if (!canAbilityBeUse)
+		if (!canAbilityBeUse && canUseSkill)
 		{
 			DrawText("NOT enough turn point to use that ability ", 70, 785, 40, BLACK);
 			DrawText("Please use an other one.", 70, 860, 60, BLACK);
 		}
-		else
+		else //Can't do that all the time if ability already taken *******************************************************
 		{
 			DrawText("Choose an ability : ", 70, 775, 70, BLACK);
 			DrawText("Write the corresponding number :", 70, 870, 40, RED);
@@ -116,12 +158,36 @@ void Pokemon::DrawPokemon()
 			}
 		}
 
-		float abilityPos = 600;
-		for (int i = 0; i < mAbilities.size(); i++)
+		if (canUseSkill) 
 		{
-			DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
-			//print damage or poketype - or both
-			abilityPos += 100;
+			float abilityPos = 600;
+			for (int i = 0; i < mAbilities.size(); i++)
+			{
+				DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
+				//print damage or poketype - or both
+				abilityPos += 100;
+			}
+		}
+		else if (isChoosingAbility) 
+		{
+			float abilityYPos = 100;
+			float abilityXPos = 0;
+			int abilityNumber = 0;
+
+			for (int i = 0; i < allAbility.size() / 3; i++)
+			{
+				abilityXPos = 80;
+				for (int j = abilityNumber; j < 3 + abilityNumber; j++) 
+				{
+					DrawText(TextFormat("%i. %s ", j + 1, allAbility[j].GetName().c_str()), abilityXPos, abilityYPos, 30, BLACK);
+					//print damage or poketype - or both
+					abilityXPos += 530;
+				}
+				abilityNumber += 3;
+				abilityYPos += 100;
+
+
+			}
 		}
 	}
 }
@@ -152,6 +218,11 @@ void Pokemon::AttackOtherPokemon(Pokemon& pokemon)
 	mAnswerPokemon = NULL;
 	answerPokemon = NULL;
 	return;
+}
+
+void Pokemon::ChooseAbility()
+{
+	isChoosingAbility = true;
 }
 
 void Pokemon::TakeDamage(int damage, Ability abilityAttack)
@@ -198,39 +269,8 @@ void Pokemon::Rest()
 
 void Pokemon::LearnNewAbilities()
 {
-
 	bool haveAbility = false;
 	int skill = 0;
-
-	if (mAbilities.size() >= 4)
-	{
-		return;
-	}
-
-	//*************** TO REFACTOR ***************************************
-	//cout << "\nHere are all the abilities : " << endl;
-	//for (int i = 1; i < allAbility.size() + 1; i++)
-	//{
-	//	//add type ?
-	//	cout << i << ". " << allAbility[i - 1].GetName() << endl;
-	//}
-
-	//cout << "Which ability do you want to choose ? (write the corresponding number) : " << endl;
-	//cin >> skill;
-	//*************** TO REFACTOR ***************************************
-
-	string wantedAbilityName = allAbility[skill - 1].GetName();
-
-	for (Ability abilities : mAbilities)
-	{
-		if (abilities.GetName() == wantedAbilityName)
-		{
-			//textToShow =  "You already have this ability, please choose an other one ";
-			haveAbility = true;
-			LearnNewAbilities();
-			break;
-		}
-	}
 
 	if (!haveAbility)
 	{

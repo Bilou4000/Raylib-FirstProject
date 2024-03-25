@@ -43,6 +43,7 @@ public:
 
 	bool CheckIfCanUseAbility();
 	void AttackOtherPokemon(Pokemon& pokemon);
+	void ChooseAbility();
 	void LearnNewAbilities();
 
 	void GetDescription();
