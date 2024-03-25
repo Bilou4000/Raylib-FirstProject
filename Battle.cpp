@@ -12,8 +12,8 @@ const char* secondLine = "";
 const char* thirdLine = "";
 const char* toChangeLine = "";
 
-bool imageIsLoad = true, imageIsUnload = false;
-bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, pokemonIsLevelingUp = false;
+bool imageIsLoad = true, imageIsUnload = false, battleIsFinished = false;
+bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, pokemonIsLevelingUp = false, canLearnNewAbility = true;
 int positionInCode = 0;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
@@ -141,6 +141,7 @@ void Battle::BattleDraw()
 Pokemon Battle::ChooseOpponentPokemon()
 {
 	Pokemon* mOpponnentPokemon = nullptr;
+	battleIsFinished = false;
 
 	positionInCode = 0;
 
@@ -289,6 +290,8 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	{
 		if (mPlayerPokemon->GetAbilities().size() >= 4)
 		{
+			canLearnNewAbility = false;
+			battleIsFinished = true;
 			return;
 		}
 
@@ -303,7 +306,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
 		secondLine = temp->c_str();
 	}
-	else if (positionInCode == 13 && opponentPokemonIsDead)
+	else if (positionInCode == 13 && opponentPokemonIsDead && canLearnNewAbility)
 	{
 		firstLine = "";
 		secondLine = "";
@@ -312,6 +315,13 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 		mPlayerPokemon->ChooseAbility();
 	}
+	else if(positionInCode == 13)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
 
 
 	if (positionInCode == 14 && !opponentPokemonIsDead)
@@ -319,6 +329,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		//end
 		firstLine = "";
 		secondLine = "";
+		battleIsFinished = true;
 		return;
 	}
 
@@ -334,10 +345,16 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		//end
 		firstLine = "";
 		secondLine = "";
+		battleIsFinished = true;
 		return;
 	}
 
 	return; 
+}
+
+bool Battle::EndOfBattle()
+{
+	return battleIsFinished;
 }
 
 

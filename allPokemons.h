@@ -22,7 +22,7 @@ static Pokemon Plusle = Pokemon(LoadImage("resources/Plusle.png"), "Plusle",
 static Pokemon Vanillite = Pokemon(LoadImage("resources/Vanillite.png"), "Vanillite",
 	" looks like an Ice cream", PokeType::Ice, 36, { IcyWind });
 static Pokemon Pancham = Pokemon(LoadImage("resources/Pancham.png"), "Pancham",
-	" does its best to be taken seriously by its enemies, but its glare is not sufficiently intimidating.", PokeType::Fighting, 67, { RollingKick });
+	" does its best to be taken seriously by its enemies, but its glare is not sufficiently intimidating.", PokeType::Fighting, 67, { RollingKick, Acid, Dig, IcyWind }); //Just RollingKick
 static Pokemon Gulpin = Pokemon(LoadImage("resources/Gulpin.png"), "Gulpin",
 	" has a stomach that comprises most of its body", PokeType::Poison, 70, { Acid });
 static Pokemon Diglett = Pokemon(LoadImage("resources/Diglett.png"), "Diglett",
