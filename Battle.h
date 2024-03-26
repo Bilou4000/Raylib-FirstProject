@@ -23,6 +23,7 @@ public:
 	void BattleDraw();
 
 	Pokemon ChooseOpponentPokemon();
+	Pokemon ChoosePokemonToCapture();
 	void BattleAgainstTrainer(Pokemon& opponentPokemon);
 	bool EndOfBattle();
 

@@ -164,6 +164,27 @@ Pokemon Battle::ChooseOpponentPokemon()
 	return *mOpponnentPokemon;
 }
 
+Pokemon Battle::ChoosePokemonToCapture()
+{
+	Pokemon* mPlayerPokemon = nullptr;
+	Pokemon* mOpponnentPokemon = nullptr;
+
+	mMaxAbilityCost = 30;
+
+	srand(time(NULL));
+	int randomPokemon = rand() % allPokemons.size();
+	mOpponnentPokemon = &allPokemons[randomPokemon];
+
+	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
+
+	secondLine = mOpponentTrainer->Introduction();
+
+	positionInCode = 1;
+	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
+
+	return *mOpponnentPokemon;
+}
+
 void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 {
 	mOpponnentPokemon = &opponentPokemon;
