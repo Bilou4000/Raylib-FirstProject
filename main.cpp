@@ -24,7 +24,7 @@ Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 vector<Pokemon> firstTeam = { Pancham };
-vector<Pokemon> secondTeam = { Snorlax };
+vector<Pokemon> secondTeam = { Snorlax, Magikarp };
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
 

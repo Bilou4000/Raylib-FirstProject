@@ -102,7 +102,7 @@ void Battle::BattleDraw()
 		imageIsLoad = true;
 	}
 
-	if (positionInCode < 3)
+	if (positionInCode == 2)
 	{
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 	}
@@ -141,7 +141,12 @@ void Battle::BattleDraw()
 Pokemon Battle::ChooseOpponentPokemon()
 {
 	Pokemon* mOpponnentPokemon = nullptr;
+
 	battleIsFinished = false;
+	opponentPokemonIsDead = false;
+	pokemonCanUseAbility = false;
+	pokemonIsLevelingUp = false;
+	canLearnNewAbility = true;
 
 	positionInCode = 0;
 
@@ -184,6 +189,7 @@ Pokemon Battle::ChoosePokemonToCapture()
 
 	return *mOpponnentPokemon;
 }
+
 
 void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 {
