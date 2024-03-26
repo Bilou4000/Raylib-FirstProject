@@ -299,6 +299,15 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		secondLine = "You can now learn a new ability";
 	}
 
+	if (positionInCode == 13) 
+	{
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
+	}
+
+
 	if (positionInCode == 13 && !opponentPokemonIsDead)
 	{
 		firstLine = "You just lost 70 gold,";

@@ -12,11 +12,15 @@ typedef enum GameScreen { MENU, START, STROLL, ATTACKPOKEMON, ATTACKTRAINER, END
 GameScreen currentScreen;
 
 //Screen
+bool mouseOnPathBox;
 int screenWidth = 1600; //1600
 int screenHeight = 1200; //1200
+int boxInput = NULL;
+int answerPath = NULL;
 
 //text Box
 Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
+Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 vector<Pokemon> firstTeam = { Pancham };
@@ -72,7 +76,7 @@ void Update()
             if (IsKeyPressed(KEY_ENTER))
             {
                 //currentScreen = START;
-                currentScreen = ATTACKTRAINER;
+                currentScreen = STROLL;
             }
         }
         break;
@@ -82,7 +86,7 @@ void Update()
         }
         case STROLL:
         {
-            //ask if wants to discover pokemon or attack trainer
+            isInCombat = false;
             StrollingAround();
         }
         break;
@@ -129,7 +133,30 @@ void Update()
 
 void StrollingAround()
 {
-    //
+    if (CheckCollisionPointRec(GetMousePosition(), pathAnswerBox))
+    {
+        if (IsMouseButtonPressed(0))
+        {
+            mouseOnPathBox = true;
+        }
+    }
+
+    if (mouseOnPathBox && GetKeyPressed())
+    {
+        boxInput = GetCharPressed();
+    }
+
+    if (IsKeyPressed(KEY_ENTER) && answerPath > 0 && answerPath <= 2)
+    {
+        if (answerPath == 1) 
+        {
+            currentScreen = ATTACKTRAINER;
+        }
+        else if (answerPath == 2) 
+        {
+            currentScreen = ATTACKPOKEMON;
+        }
+    }
 }
 
 
@@ -153,7 +180,31 @@ void Draw()
         break;
         case STROLL:
         {
-            //
+            DrawRectangleRec(TextBox, WHITE);
+
+            DrawText("YOU HAVE 2 PATH IN FRONT OF YOU : ", 70, 125, 70, RED);
+            DrawText("1. Challenge an other trainer ", 70, 300, 70, BLACK);
+            DrawText("2. Try to battle and capture a Pokemon : ", 70, 400, 70, BLACK);
+
+            DrawText("Choose a path : ", 70, 775, 70, BLACK);
+            DrawText("Write the corresponding number :", 70, 870, 40, RED);
+
+            DrawRectangleRec(pathAnswerBox, LIGHTGRAY);
+
+            if (mouseOnPathBox)
+            {
+                if (isdigit(boxInput))
+                {
+                    string printAnswer{ (char)boxInput };
+                    DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
+
+                    answerPath = stoi(printAnswer);
+                }
+                else
+                {
+                    DrawText("_", 800, 855, 70, BLACK);
+                }
+            }
         }
         break;
         case ATTACKPOKEMON:
@@ -165,7 +216,6 @@ void Draw()
         {
             DrawRectangleRec(TextBox, WHITE);
             theBattle.BattleDraw();
-            //firstTrainer.DrawTrainer();
         }
         break;
         case ENDING:
