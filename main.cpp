@@ -23,7 +23,8 @@ Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
-vector<Pokemon> firstTeam = { Pancham };
+
+vector<Pokemon> firstTeam = { Pancham, Minun, Plusle, Mewtwo };
 vector<Pokemon> secondTeam = { Snorlax, Magikarp };
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
