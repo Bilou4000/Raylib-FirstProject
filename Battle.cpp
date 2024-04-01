@@ -117,7 +117,7 @@ void Battle::BattleDraw()
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
 
-		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 800, 150, 60, BLACK);
+		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
 		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
 
 		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
@@ -266,7 +266,8 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 
 	if (positionInCode == 10 && !opponentPokemonIsDead)
 	{
-		firstLine = TextFormat("%s did %i damage to you", mOpponnentPokemon->GetPokemonName().c_str(), ( int )mOpponnentPokemon->GetPokemonDamage());
+		firstLine = TextFormat("%s used %s", mOpponnentPokemon->GetPokemonName().c_str(), mOpponentPokemonAbility.GetName().c_str());
+		secondLine = TextFormat("it did %i damage to you", ( int )mPlayerPokemon->GetPokemonDamage());
 	}
 
 	if (positionInCode == 11 && !opponentPokemonIsDead)
