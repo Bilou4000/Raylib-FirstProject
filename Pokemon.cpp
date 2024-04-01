@@ -50,13 +50,8 @@ void Pokemon::UpdatePokemon()
 {
 	if (canUseSkill)
 	{
-		if (CheckCollisionPointRec(GetMousePosition(), abilityAnswerBox))
-		{
-			if (IsMouseButtonPressed(0))
-			{
-				mouseOnBox = true;
-			}
-		}
+
+		mouseOnBox = true;
 
 		if (mouseOnBox && GetKeyPressed())
 		{
@@ -74,8 +69,6 @@ void Pokemon::UpdatePokemon()
 			}
 			else
 			{
-				mouseOnBox = false;
-
 				mAnswerPokemon = answerPokemon;
 				cout << mAnswerPokemon << endl;
 			}
@@ -92,13 +85,7 @@ void Pokemon::UpdatePokemon()
 	{
 		canUseSkill = false;
 
-		if (CheckCollisionPointRec(GetMousePosition(), abilityAnswerBox))
-		{
-			if (IsMouseButtonPressed(0))
-			{
-				mouseOnBox = true;
-			}
-		}
+		mouseOnBox = true;
 
 		if (mouseOnBox && GetKeyPressed())
 		{
@@ -333,6 +320,11 @@ void Pokemon::LearnNewAbilities()
 	mAbilities.push_back(allAbility[mAnswerPokemon - 1]);
 
 	isChoosingAbility = false;
+
+	letterCount = 0;
+	name[0] = '\0';
+	name[1] = '\0';
+
 	mAnswerPokemon = NULL;
 	answerPokemon = NULL;
 	return;

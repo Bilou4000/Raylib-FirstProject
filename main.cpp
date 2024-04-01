@@ -134,13 +134,9 @@ void Update()
 
 void StrollingAround()
 {
-    if (CheckCollisionPointRec(GetMousePosition(), pathAnswerBox))
-    {
-        if (IsMouseButtonPressed(0))
-        {
-            mouseOnPathBox = true;
-        }
-    }
+
+    mouseOnPathBox = true;
+
 
     if (mouseOnPathBox && GetKeyPressed())
     {

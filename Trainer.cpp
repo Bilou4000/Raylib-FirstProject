@@ -40,13 +40,7 @@ void Trainer::UpdateTrainer()
 {
 	if (isInSendPokemon)
 	{
-		if (CheckCollisionPointRec(GetMousePosition(), answerBox))
-		{
-			if (IsMouseButtonPressed(0))
-			{
-				mouseOnText = true;
-			}
-		}
+		mouseOnText = true;
 
 		if (mouseOnText && GetKeyPressed())
 		{
