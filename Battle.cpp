@@ -14,7 +14,7 @@ const char* thirdLine = "";
 const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false, battleIsFinished = false;
-bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, pokemonIsLevelingUp = false, canLearnNewAbility = true;
+bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, playerPokemonIsDead = false, pokemonIsLevelingUp = false, canLearnNewAbility = true;
 int positionInCode = 0;
 
 Rectangle captureAnswerBox { 780, 1060, 80, 70 };
@@ -46,6 +46,9 @@ void Battle::BattleTrainerUpdate()
 {
 	mThePlayer->UpdateTrainer();
 	mPlayerPokemon->UpdatePokemon();
+
+	cout << positionInCode << endl;
+	//*****************************************************************************************************************
 
 	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
 	{
@@ -133,9 +136,10 @@ void Battle::BattleCaptureUpdate()
 
 	if (positionInCode == 7)
 	{
-		cout << "qsfqsfqsf" << endl;
 		if (mPlayerPokemon->GetAnswerPokemon() > 0)
 		{
+			//******************************************************************************************************************************
+			cout << "qsfqsfqsf" << endl;
 			positionInCode = 8;
 		}
 	}
@@ -297,14 +301,10 @@ void Battle::UpdateChooseIfCapture()
 		if (answerCapture == 1)
 		{
 			isCapturing = true;
-			//CapturePokemon();
-			//positionInCode = 7;
 		}
 		else if (answerCapture == 2)
 		{
 			isCapturing = false;
-			//AttackPokemon();
-			//positionInCode = 7;
 		}
 	}
 }
@@ -772,14 +772,6 @@ void Battle::AttackPokemon()
 		{
 			firstLine = "Your pokemon just died.";
 			secondLine = "Please change it";
-
-			//**************************************************************************************************************************
-			positionInCode = 7;
-			captureBoxInput = NULL;
-			answerCapture = NULL;
-			isCapturing = -1;
-
-			return BattleAgainstPokemon(*mOpponnentPokemon);
 		}
 	}
 
@@ -819,6 +811,17 @@ void Battle::AttackPokemon()
 
 		firstLine = "Your Pokemon is leveling up !!!";
 		secondLine = "You can now learn a new ability";
+	}
+
+	if (positionInCode == 13 && !opponentPokemonIsDead)
+	{
+		positionInCode = 3;
+		pokemonCanUseAbility = false;
+		captureBoxInput = NULL;
+		answerCapture = NULL;
+		isCapturing = -1;
+
+		return BattleAgainstPokemon(*mOpponnentPokemon);
 	}
 
 	if (positionInCode == 14)
