@@ -21,6 +21,7 @@ Rectangle captureAnswerBox { 780, 1060, 80, 70 };
 int captureBoxInput = NULL;
 int answerCapture = NULL;
 int isCapturing = -1;
+bool canCapture = true, hasManagedToCapture = true;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
 Image opponentPokemonImage = LoadImage("resources/white.png");
@@ -42,13 +43,12 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 	mMaxAbilityCost = 5;
 }
 
+
+//AGAINST TRAINER
 void Battle::BattleTrainerUpdate()
 {
 	mThePlayer->UpdateTrainer();
 	mPlayerPokemon->UpdatePokemon();
-
-	cout << positionInCode << endl;
-	//*****************************************************************************************************************
 
 	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
 	{
@@ -88,63 +88,6 @@ void Battle::BattleTrainerUpdate()
 	if (positionInCode == 13 && mPlayerPokemon->GetAnswerPokemon() > 0)
 	{
 		positionInCode = 14;
-	}
-}
-
-void Battle::BattleCaptureUpdate()
-{
-	mThePlayer->UpdateTrainer();
-	mPlayerPokemon->UpdatePokemon();
-
-	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
-	{
-		firstLine = toChangeLine;
-		secondLine = "";
-		imageIsLoad = false;
-	}
-
-	if (positionInCode == 3)
-	{
-		firstLine = "";
-		if (!imageIsUnload)
-		{
-			UnloadTexture(opponentPokemonTexture);
-			imageIsUnload = true;
-		}
-	}
-
-	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && positionInCode != 6 && 
-		!pokemonCanUseAbility && !pokemonIsLevelingUp)
-	{
-		positionInCode++;
-	}
-
-	if (mThePlayer->GetAnswerTrainer() > 0 && positionInCode == 3)
-	{
-		positionInCode = 4;
-	}
-
-	if (positionInCode == 6)
-	{
-		UpdateChooseIfCapture();
-
-		if (isCapturing != -1)
-		{
-			positionInCode = 7;
-		}
-	}
-
-	if (positionInCode == 7)
-	{
-		if (mPlayerPokemon->GetAnswerPokemon() > 0)
-		{
-			positionInCode = 8;
-		}
-	}
-
-	if (positionInCode == 12 && mPlayerPokemon->GetAnswerPokemon() > 0)
-	{
-		positionInCode = 13;
 	}
 }
 
@@ -204,110 +147,6 @@ void Battle::BattleTrainerDraw()
 	}
 }
 
-void Battle::BattleCaptureDraw()
-{
-	mThePlayer->DrawTrainer();
-	mPlayerPokemon->DrawPokemon();
-
-	DrawText(firstLine, 70, 775, 70, BLACK);
-	DrawText(secondLine, 70, 870, 70, BLACK);
-	DrawText(thirdLine, 70, 1050, 70, BLACK);
-
-	if (!imageIsLoad)
-	{
-		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-
-		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
-		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
-
-		imageIsLoad = true;
-	}
-
-	if (positionInCode == 2)
-	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
-	}
-
-	if (positionInCode == 4)
-	{
-		imageIsLoad = false;
-	}
-
-	if (positionInCode >= 5 && (positionInCode != 12 || !opponentPokemonIsDead))
-	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
-		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
-
-		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
-
-		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);
-	}
-
-	if (positionInCode == 5)
-	{
-		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
-	}
-
-	if (positionInCode == 6)
-	{
-		DrawChooseIfCapture();
-	}
-
-	//********************************************************************************************************************************************************
-	if (positionInCode == 14 && opponentPokemonIsDead)
-	{
-		const Ability& newAbility = mPlayerPokemon->GetAbilities()[mPlayerPokemon->GetAbilities().size() - 1];
-		firstLine = TextFormat("%s has now learned", mPlayerPokemon->GetPokemonName().c_str());
-		DrawText(TextFormat("%s", newAbility.GetName().c_str()), 70, 900, 90, RED);
-		return;
-	}
-}
-
-void Battle::DrawChooseIfCapture()
-{
-	firstLine = "Do you wish to try to :";
-	secondLine = TextFormat("1. Capture %s ", mOpponnentPokemon->GetPokemonName().c_str());
-	DrawText(TextFormat("2. Attack %s", mOpponnentPokemon->GetPokemonName().c_str()), 70, 970, 70, BLACK);
-	DrawText("Write the corresponding number :", 70, 1070, 40, RED);
-
-	DrawRectangleRec(captureAnswerBox, LIGHTGRAY);
-
-	if (isdigit(captureBoxInput))
-	{
-		string printAnswer { (char) captureBoxInput };
-		DrawText(TextFormat("%s", printAnswer.c_str()), 800, 1065, 70, BLACK);
-
-		answerCapture = stoi(printAnswer);
-	}
-	else
-	{
-		DrawText("_", 800, 1065, 70, BLACK);
-	}
-}
-
-void Battle::UpdateChooseIfCapture()
-{
-	if (GetKeyPressed())
-	{
-		captureBoxInput = GetCharPressed();
-	}
-
-	if (IsKeyPressed(KEY_ENTER) && answerCapture > 0 && answerCapture <= 2)
-	{
-		if (answerCapture == 1)
-		{
-			isCapturing = true;
-		}
-		else if (answerCapture == 2)
-		{
-			isCapturing = false;
-		}
-	}
-}
-
 
 Pokemon Battle::ChooseOpponentPokemon()
 {
@@ -336,35 +175,6 @@ Pokemon Battle::ChooseOpponentPokemon()
 
 	positionInCode = 1;
 	toChangeLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
-
-	return *mOpponnentPokemon;
-}
-
-Pokemon Battle::ChoosePokemonToCapture()
-{
-	Pokemon* mPlayerPokemon = nullptr;
-	Pokemon* mOpponnentPokemon = nullptr;
-
-	mMaxAbilityCost = 30;
-
-	battleIsFinished = false;
-	opponentPokemonIsDead = false;
-	pokemonCanUseAbility = false;
-	pokemonIsLevelingUp = false;
-	canLearnNewAbility = true;
-
-	positionInCode = 0; 
-	firstLine = "You stumble in a battle !";
-
-
-	srand(time(NULL));
-	int randomPokemon = rand() % allPokemons.size();
-	mOpponnentPokemon = &allPokemons[randomPokemon];
-
-	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
-
-	positionInCode = 1;
-	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
 }
@@ -573,8 +383,203 @@ bool Battle::EndOfBattle()
 
 
 
+//AGAINST POKEMON
+void Battle::BattleCaptureUpdate()
+{
+	mThePlayer->UpdateTrainer();
+	mPlayerPokemon->UpdatePokemon();
+
+	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
+	{
+		firstLine = toChangeLine;
+		secondLine = "";
+		imageIsLoad = false;
+	}
+
+	if (positionInCode == 3)
+	{
+		firstLine = "";
+		if (!imageIsUnload)
+		{
+			UnloadTexture(opponentPokemonTexture);
+			imageIsUnload = true;
+		}
+	}
+
+	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && positionInCode != 6 &&
+		!pokemonCanUseAbility && !pokemonIsLevelingUp)
+	{
+		positionInCode++;
+	}
+
+	if (mThePlayer->GetAnswerTrainer() > 0 && positionInCode == 3)
+	{
+		positionInCode = 4;
+	}
+
+	if (positionInCode == 6)
+	{
+		UpdateChooseIfCapture();
+
+		if (isCapturing != -1)
+		{
+			positionInCode = 7;
+		}
+	}
+
+	if (positionInCode == 7)
+	{
+		if (mPlayerPokemon->GetAnswerPokemon() > 0)
+		{
+			positionInCode = 8;
+		}
+	}
+
+	if (positionInCode == 12 && mPlayerPokemon->GetAnswerPokemon() > 0 && !isCapturing)
+	{
+		positionInCode = 13;
+	}
+}
+
+
+void Battle::BattleCaptureDraw()
+{
+	mThePlayer->DrawTrainer();
+	mPlayerPokemon->DrawPokemon();
+
+	DrawText(firstLine, 70, 775, 70, BLACK);
+	DrawText(secondLine, 70, 870, 70, BLACK);
+	DrawText(thirdLine, 70, 1050, 70, BLACK);
+
+	if (!imageIsLoad)
+	{
+		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
+		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
+		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
+
+		imageIsLoad = true;
+	}
+
+	if (positionInCode == 2)
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+	}
+
+	if (positionInCode == 4)
+	{
+		imageIsLoad = false;
+	}
+
+	if (positionInCode >= 5 && (positionInCode != 12 || !opponentPokemonIsDead))
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
+
+		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
+
+		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
+		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);
+	}
+
+	if (positionInCode == 5)
+	{
+		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+	}
+
+	if (positionInCode == 6)
+	{
+		DrawChooseIfCapture();
+	}
+
+	if (positionInCode == 14 && opponentPokemonIsDead && !isCapturing)
+	{
+		const Ability& newAbility = mPlayerPokemon->GetAbilities()[mPlayerPokemon->GetAbilities().size() - 1];
+		firstLine = TextFormat("%s has now learned", mPlayerPokemon->GetPokemonName().c_str());
+		DrawText(TextFormat("%s", newAbility.GetName().c_str()), 70, 900, 90, RED);
+		return;
+	}
+}
+
+void Battle::DrawChooseIfCapture()
+{
+	firstLine = "Do you wish to try to :";
+	secondLine = TextFormat("1. Capture %s ", mOpponnentPokemon->GetPokemonName().c_str());
+	DrawText(TextFormat("2. Attack %s", mOpponnentPokemon->GetPokemonName().c_str()), 70, 970, 70, BLACK);
+	DrawText("Write the corresponding number :", 70, 1070, 40, RED);
+
+	DrawRectangleRec(captureAnswerBox, LIGHTGRAY);
+
+	if (isdigit(captureBoxInput))
+	{
+		string printAnswer { (char) captureBoxInput };
+		DrawText(TextFormat("%s", printAnswer.c_str()), 800, 1065, 70, BLACK);
+
+		answerCapture = stoi(printAnswer);
+	}
+	else
+	{
+		DrawText("_", 800, 1065, 70, BLACK);
+	}
+}
+
+void Battle::UpdateChooseIfCapture()
+{
+	if (GetKeyPressed())
+	{
+		captureBoxInput = GetCharPressed();
+	}
+
+	if (IsKeyPressed(KEY_ENTER) && answerCapture > 0 && answerCapture <= 2)
+	{
+		if (answerCapture == 1)
+		{
+			isCapturing = true;
+		}
+		else if (answerCapture == 2)
+		{
+			isCapturing = false;
+		}
+	}
+}
+
+
+Pokemon Battle::ChoosePokemonToCapture()
+{
+	Pokemon* mOpponnentPokemon = nullptr;
+
+	mMaxAbilityCost = 30;
+
+	battleIsFinished = false;
+	opponentPokemonIsDead = false;
+	pokemonCanUseAbility = false;
+	pokemonIsLevelingUp = false;
+	canLearnNewAbility = true;
+
+	positionInCode = 0;
+	firstLine = "You stumble in a battle !";
+
+
+	srand(time(NULL));
+	int randomPokemon = rand() % allPokemons.size();
+	mOpponnentPokemon = &allPokemons[randomPokemon];
+
+	//*************************************************************TO ERASE******************************************************
+	//mOpponnentPokemon = &allPokemons[9];
+
+	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
+
+	positionInCode = 1;
+	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
+
+	return *mOpponnentPokemon;
+}
+
 void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 {
+	//********************************************************************************************************************
 	cout << positionInCode << endl;
 
 	mOpponnentPokemon = &opponentPokemon;
@@ -603,97 +608,7 @@ void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 		CapturePokemon();
 	}
 
-	return;
-
-	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
-	{
-		cout << "Do you wish to try to capture " << mOpponnentPokemon->GetPokemonName() << " or attack it ?" << endl;
-		cout << "1. Capture \n" << "2. Attack" << endl;
-		int answer;
-		cin >> answer;
-
-		if (answer == 1)
-		{
-			if (mThePlayer->IsPokemonCaptured(*mOpponnentPokemon))
-			{
-				return;
-			}
-
-			const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
-			int randomAbility = rand() % abilities.size();
-			mOpponentPokemonAbility = abilities[randomAbility];
-
-			cout << mOpponnentPokemon->GetPokemonName() << " used " << mOpponentPokemonAbility.GetName()
-				<< ", it does " << mOpponnentPokemon->GetPokemonDamage() << " damage to your Pokemon" << endl;
-			// You now have : pv
-
-			mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
-		}
-		else if (answer == 2)
-		{
-			//if (mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon) == true)
-			//{
-			//	cout << " damage to " << mOpponnentPokemon->GetPokemonName() << endl;
-			//	cout << "He now has " << mOpponnentPokemon->GetPokemonLife() << " pv\n" << endl;
-
-			//	if (mOpponnentPokemon->GetPokemonLife() <= 0)
-			//	{
-			//		break;
-			//	}
-
-			//	const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
-			//	int randomAbility = rand() % abilities.size();
-			//	mOpponentPokemonAbility = abilities[randomAbility];
-
-			//	cout << mOpponnentPokemon->GetPokemonName() << " used " << mOpponentPokemonAbility.GetName()
-			//		<< ", it does " << mOpponnentPokemon->GetPokemonDamage() << " damage to your Pokemon" << endl;
-			//	// You now have : pv
-
-			//	mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
-
-			//}
-			//else
-			//{
-			//	return BattleAgainstPokemon(false);
-			//}
-		}
-	}
-
-	if (mOpponnentPokemon->GetPokemonLife() <= 0)
-	{
-		mThePlayer->WinFight();
-
-		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
-		{
-			mThePlayer->GetPokemonTeam()[i].Rest();
-		}
-
-		if (mPlayerPokemon->GetAbilities().size() >= 4)
-		{
-			return;
-		}
-
-		cout << "\nYour Pokemon is leveling up !!! \nYou can now learn a new ability !" << endl;
-		mPlayerPokemon->LearnNewAbilities();
-
-		return;
-	}
-
-	//if (mPlayerPokemon->GetPokemonLife() <= 0)
-	//{
-	//	cout << "\nYour pokemon has been defeated, he now has " << mPlayerPokemon->GetPokemonLife() << "pv" << endl;
-
-	//	if (mThePlayer->CheckIfTeamDead())
-	//	{
-	//		return;
-	//	}
-	//	if (!mThePlayer->CheckIfTeamDead())
-	//	{
-	//		//mDeadPlayerPokemon = *mPlayerPokemon;
-
-	//		return BattleAgainstPokemon(false);
-	//	}
-	//}
+	//return;
 }
 
 void Battle::AttackPokemon()
@@ -842,6 +757,11 @@ void Battle::AttackPokemon()
 	{
 		firstLine = "All your pokemons are dead";
 		secondLine = "You have lost the fight !";
+
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
 	}
 
 	if (positionInCode == 15)
@@ -857,4 +777,136 @@ void Battle::AttackPokemon()
 
 void Battle::CapturePokemon()
 {
+	if (positionInCode == 7)
+	{
+ 		if (mThePlayer->GetPokeballs() > 0 && mThePlayer->GetPokemonTeam().size() < 6)
+		{
+			firstLine = TextFormat("You are trying to capture %s", mOpponnentPokemon->GetPokemonName().c_str());
+			secondLine = "";
+			canCapture = true;
+		}
+		else if (mThePlayer->GetPokemonTeam().size() >= 6)
+		{
+			firstLine = "Your team is already full.";
+			secondLine = "You can't capture any more pokemon";
+			canCapture = false;
+		}
+		else if (mThePlayer->GetPokeballs() <= 0)
+		{
+			firstLine = "You don't have enough Pokeballs.";
+			secondLine = "Go win against a Trainer to have more.";
+			canCapture = false;
+		}
+	}
+
+	if (positionInCode == 8 && !canCapture)
+	{
+		positionInCode = 6;
+		pokemonCanUseAbility = false;
+		captureBoxInput = NULL;
+		answerCapture = NULL;
+		isCapturing = -1;
+
+		return BattleAgainstPokemon(*mOpponnentPokemon);
+	}
+
+	if (positionInCode == 8 && canCapture)
+	{
+		if (mThePlayer->IsPokemonCaptured(*mOpponnentPokemon))
+		{
+			cout << mPlayerPokemon->GetPokemonName() << endl;
+			//mPlayerPokemon = 
+			firstLine = TextFormat("You have managed to capture %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
+			secondLine = TextFormat("%s is now part of your team !", mOpponnentPokemon->GetPokemonName().c_str());
+
+			hasManagedToCapture = true;
+		}
+		else
+		{
+			firstLine = TextFormat("You have failed to capture %s...", mOpponnentPokemon->GetPokemonName().c_str());
+			secondLine = "Damage it to be able to capture it !";
+			hasManagedToCapture = false;
+		}
+	}
+
+	if (positionInCode == 9 && hasManagedToCapture)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
+
+	else if (positionInCode == 9 && !hasManagedToCapture)
+	{
+		srand(time(NULL));
+		const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
+		int randomAbility = rand() % abilities.size();
+		mOpponentPokemonAbility = abilities[randomAbility];
+
+		mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
+		positionInCode = 10;
+	}
+
+	if (positionInCode == 10)
+	{
+		firstLine = TextFormat("%s used %s", mOpponnentPokemon->GetPokemonName().c_str(), mOpponentPokemonAbility.GetName().c_str());
+		secondLine = TextFormat("it did %i damage to you", (int) mPlayerPokemon->GetPokemonDamage());
+	}
+
+	if (positionInCode == 11)
+	{
+		if (mThePlayer->CheckIfTeamDead())
+		{
+			positionInCode = 13;
+		}
+		else
+		{
+			if (mPlayerPokemon->GetPokemonLife() > 0)
+			{
+				positionInCode = 6;
+				pokemonCanUseAbility = false;
+				captureBoxInput = NULL;
+				answerCapture = NULL;
+				isCapturing = -1;
+
+				return BattleAgainstPokemon(*mOpponnentPokemon);
+			}
+			else
+			{
+				firstLine = "Your pokemon just died.";
+				secondLine = "Please change it";
+			}
+		}
+	}
+
+	if (positionInCode == 12)
+	{
+		positionInCode = 3;
+		pokemonCanUseAbility = false;
+		captureBoxInput = NULL;
+		answerCapture = NULL;
+		isCapturing = -1;
+
+		return BattleAgainstPokemon(*mOpponnentPokemon);
+	}
+
+	if (positionInCode == 13)
+	{
+		firstLine = "All your pokemons are dead";
+		secondLine = "You have lost the fight !";
+
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
+	}
+
+	if (positionInCode == 14)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
 }

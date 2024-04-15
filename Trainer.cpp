@@ -140,39 +140,17 @@ const char* Trainer::ChallengeTrainer()
 
 bool Trainer::IsPokemonCaptured(Pokemon& pokemon)
 {
-	if (mPokemonTeam.size() < 6 && mPokeballs > 0)
-	{
-		//*************** TO REFACTOR ***************************************
-		//cout << "\nYou are trying to capture " << pokemon.GetPokemonName() << endl;
+	//float captureRate = (((1.0f + (((pokemon.GetPokemonMaxLife() * 3.0f) - (pokemon.GetPokemonLife() * 2.0f)) * 256.0f))
+	//	/ (pokemon.GetPokemonMaxLife() * 3.0f)) / 334.0f) * 100.0f;
 
-		float captureRate = (((1.0f + (((pokemon.GetPokemonMaxLife() * 3.0f) - (pokemon.GetPokemonLife() * 2.0f)) * 256.0f)) 
-			/ (pokemon.GetPokemonMaxLife() * 3.0f)) / 334.0f) * 100.0f;
+	//if (captureRate <= 50)
+	//{
+	//	return false;
+	//}
 
-		if (captureRate <= 50)
-		{
-			//*************** TO REFACTOR ***************************************
-			cout << "You have failed to capture the pokemon" << endl;
-			return false;
-		}
-
-		//*************** TO REFACTOR ***************************************
-		//cout << "You have managed to capture " << pokemon.GetPokemonName() << " !!!!" << endl;
-
-		mPokemonTeam.push_back(pokemon);
-		mPokeballs -= 1;
-		return true;
-	}
-	else if (mPokeballs <= 0)
-	{
-		//*************** TO REFACTOR ***************************************
-		cout << "\nYou don't have enough Pokeballs, try an other time." << endl;
-
-		return false;
-	}
-	//*************** TO REFACTOR ***************************************
-	cout << "\nYou already have 6 pokemon and can't capture one anymore" << endl;
-
-	return false;
+	mPokemonTeam.push_back(pokemon);
+	mPokeballs -= 1;
+	return true;
 }
 
 bool Trainer::CheckIfTeamDead()

@@ -301,7 +301,6 @@ void Pokemon::TakeDamage(int damage, Ability abilityAttack)
 
 void Pokemon::Rest()
 {
-
 	mLife = mMaxLife;
 
 	for (int i = 0; i < mAbilities.size(); i++)
