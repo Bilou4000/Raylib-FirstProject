@@ -138,15 +138,13 @@ void Battle::BattleCaptureUpdate()
 	{
 		if (mPlayerPokemon->GetAnswerPokemon() > 0)
 		{
-			//******************************************************************************************************************************
-			cout << "qsfqsfqsf" << endl;
 			positionInCode = 8;
 		}
 	}
 
-	if (positionInCode == 14 && mPlayerPokemon->GetAnswerPokemon() > 0)
+	if (positionInCode == 12 && mPlayerPokemon->GetAnswerPokemon() > 0)
 	{
-		positionInCode = 15;
+		positionInCode = 13;
 	}
 }
 
@@ -236,7 +234,7 @@ void Battle::BattleCaptureDraw()
 		imageIsLoad = false;
 	}
 
-	if (positionInCode >= 5 && (positionInCode != 14 || !opponentPokemonIsDead))
+	if (positionInCode >= 5 && (positionInCode != 12 || !opponentPokemonIsDead))
 	{
 		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
 		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
@@ -258,7 +256,8 @@ void Battle::BattleCaptureDraw()
 		DrawChooseIfCapture();
 	}
 
-	if (positionInCode == 16)
+	//********************************************************************************************************************************************************
+	if (positionInCode == 14 && opponentPokemonIsDead)
 	{
 		const Ability& newAbility = mPlayerPokemon->GetAbilities()[mPlayerPokemon->GetAbilities().size() - 1];
 		firstLine = TextFormat("%s has now learned", mPlayerPokemon->GetPokemonName().c_str());
@@ -507,7 +506,7 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 		secondLine = "You can now learn a new ability";
 	}
 
-	if (positionInCode == 13) 
+	if (positionInCode >= 13) 
 	{
 		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
 		{
@@ -597,6 +596,11 @@ void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 	if (positionInCode >= 7 && !isCapturing)
 	{
 		AttackPokemon();
+	}
+
+	if (positionInCode >= 7 && isCapturing)
+	{
+		CapturePokemon();
 	}
 
 	return;
@@ -759,48 +763,7 @@ void Battle::AttackPokemon()
 		secondLine = TextFormat("it did %i damage to you", (int) mPlayerPokemon->GetPokemonDamage());
 	}
 
-	if (positionInCode == 12 && !opponentPokemonIsDead)
-	{
-		if (mThePlayer->CheckIfTeamDead())
-		{
-			firstLine = "All your pokemons are dead";
-			secondLine = "You have lost the fight";
-
-			positionInCode = 13;
-		}
-		else
-		{
-			firstLine = "Your pokemon just died.";
-			secondLine = "Please change it";
-		}
-	}
-
-	if (opponentPokemonIsDead && positionInCode == 11)
-	{
-		if (mThePlayer->WinFight())
-		{
-			firstLine = "You won 100 gold";
-
-			string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
-			secondLine = temp->c_str();
-			positionInCode = 12;
-		}
-		else
-		{
-			firstLine = "You won 2 new Pokeballs";
-
-			string* temp = new string(TextFormat("you now have %i Pokeballs", mThePlayer->GetPokeballs()));
-			secondLine = temp->c_str();
-			positionInCode = 12;
-		}
-
-		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
-		{
-			mThePlayer->GetPokemonTeam()[i].Rest();
-		}
-	}
-
-	if (positionInCode == 13 && opponentPokemonIsDead)
+	if (positionInCode == 11 && opponentPokemonIsDead)
 	{
 		if (mPlayerPokemon->GetAbilities().size() >= 4)
 		{
@@ -811,6 +774,50 @@ void Battle::AttackPokemon()
 
 		firstLine = "Your Pokemon is leveling up !!!";
 		secondLine = "You can now learn a new ability";
+	}
+
+	if (positionInCode == 12 && !opponentPokemonIsDead)
+	{
+		if (mThePlayer->CheckIfTeamDead())
+		{
+			positionInCode = 14;
+		}
+		else
+		{
+			if (mPlayerPokemon->GetPokemonLife() > 0)
+			{
+				positionInCode = 7;
+			}
+			else
+			{
+				firstLine = "Your pokemon just died.";
+				secondLine = "Please change it";
+			}
+		}
+	}
+
+	if (positionInCode == 12 && opponentPokemonIsDead)
+	{
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
+	}
+	
+	if (positionInCode == 12 && opponentPokemonIsDead && canLearnNewAbility)
+	{
+		firstLine = "";
+		secondLine = "";
+		pokemonIsLevelingUp = true;
+
+		mPlayerPokemon->ChooseAbility();
+	}
+	else if (positionInCode == 12 && opponentPokemonIsDead)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
 	}
 
 	if (positionInCode == 13 && !opponentPokemonIsDead)
@@ -824,56 +831,20 @@ void Battle::AttackPokemon()
 		return BattleAgainstPokemon(*mOpponnentPokemon);
 	}
 
-	if (positionInCode == 14)
-	{
-		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
-		{
-			mThePlayer->GetPokemonTeam()[i].Rest();
-		}
-	}
-
-
-	if (positionInCode == 14 && !opponentPokemonIsDead)
-	{
-		firstLine = "You just lost 70 gold,";
-
-		string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
-		secondLine = temp->c_str();
-	}
-	else if (positionInCode == 14 && opponentPokemonIsDead && canLearnNewAbility)
-	{
-		firstLine = "";
-		secondLine = "";
-
-		pokemonIsLevelingUp = true;
-
-		mPlayerPokemon->ChooseAbility();
-	}
-	else if (positionInCode == 14)
-	{
-		firstLine = "";
-		secondLine = "";
-		battleIsFinished = true;
-		return;
-	}
-
-
-	if (positionInCode == 15 && !opponentPokemonIsDead)
-	{
-		firstLine = "";
-		secondLine = "";
-		battleIsFinished = true;
-		return;
-	}
-
-	if (positionInCode == 15 && opponentPokemonIsDead)
+	if (positionInCode == 13 && opponentPokemonIsDead)
 	{
 		mPlayerPokemon->LearnNewAbilities();
 		pokemonIsLevelingUp = false;
-		positionInCode = 16;
+		positionInCode = 14;
 	}
 
-	if (positionInCode == 17)
+	if (positionInCode == 14 && !opponentPokemonIsDead)
+	{
+		firstLine = "All your pokemons are dead";
+		secondLine = "You have lost the fight !";
+	}
+
+	if (positionInCode == 15)
 	{
 		firstLine = "";
 		secondLine = "";

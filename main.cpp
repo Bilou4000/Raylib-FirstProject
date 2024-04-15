@@ -24,10 +24,11 @@ Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 
-vector<Pokemon> firstTeam = { Pancham, Minun, Plusle, Magikarp, Magikarp };
+vector<Pokemon> firstTeam = { Pancham, Minun, Magikarp };
 vector<Pokemon> secondTeam = { Copperajah, Snorlax, Magikarp };
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
+//Pancham, Minun, Plusle, Magikarp, 
 
 Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
 Trainer secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam);
