@@ -135,6 +135,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ability.cpp" />
+    <ClCompile Include="allPokemons.cpp" />
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pokemon.cpp" />

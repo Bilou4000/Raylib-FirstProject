@@ -24,17 +24,17 @@ Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 
-vector<Pokemon> firstTeam = { Minun, Magikarp, };
-vector<Pokemon> secondTeam = { Copperajah, Snorlax, Magikarp };
+vector<Pokemon> firstTeam;
+vector<Pokemon> secondTeam;
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
 //Pancham, Minun, Plusle, Magikarp, 
 
-Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
-Trainer secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam);
+Trainer firstTrainer;
+Trainer secondTrainer;
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 
-Battle theBattle = Battle(firstTrainer, secondTrainer); 
+Battle theBattle; 
 Pokemon opponentPokemon = Pokemon();
 bool isInCombat = false;
 
@@ -67,6 +67,16 @@ void Load()
     InitWindow(screenWidth, screenHeight, "RAYLIB PROJECT");
     currentScreen = MENU;
     SetTargetFPS(60);
+
+    AllPokemons::Load();
+
+    firstTeam = { AllPokemons::Minun, AllPokemons::Magikarp, };
+    secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
+
+    firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
+    secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam); 
+
+    theBattle = Battle(firstTrainer, secondTrainer);
 }
 
 void Update() 

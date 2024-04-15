@@ -34,9 +34,9 @@ Pokemon::Pokemon()
 	mAbilities = { Thunder, Aeroblast };
 }
 
-Pokemon::Pokemon(Image imagePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie)
+Pokemon::Pokemon(Texture2D texturePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie)
 {
-	mImagePokemon = imagePokemon;
+	mTexturePokemon = texturePokemon;
 	mName = name;
 	mDescription = description;
 	mType = type;
@@ -337,9 +337,9 @@ void Pokemon::GetDescription()
 	//	"\nHis abilities are " << endl;
 }
 
-Image* Pokemon::GetPokemonImage()
+Texture2D* Pokemon::GetPokemonTexture()
 {
-	return &mImagePokemon;
+	return &mTexturePokemon;
 }
 
 const vector<Ability>& Pokemon::GetAbilities() const

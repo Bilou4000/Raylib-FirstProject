@@ -23,11 +23,9 @@ int answerCapture = NULL;
 int isCapturing = -1;
 bool canCapture = true, hasManagedToCapture = true;
 
-Image playerPokemonImage = LoadImage("resources/white.png");
-Image opponentPokemonImage = LoadImage("resources/white.png");
-
-Texture2D opponentPokemonTexture;
-Texture2D playerPokemonTexture;
+Battle::Battle()
+{
+}
 
 //Function
 Battle::Battle(Trainer& thePlayer)
@@ -60,11 +58,6 @@ void Battle::BattleTrainerUpdate()
 	if (positionInCode == 3)
 	{
 		firstLine = "";
-		if (!imageIsUnload) 
-		{
-			UnloadTexture(opponentPokemonTexture);
-			imageIsUnload = true;
-		}
 	}
 
  	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && !pokemonCanUseAbility && !pokemonIsLevelingUp)
@@ -100,20 +93,9 @@ void Battle::BattleTrainerDraw()
 	DrawText(secondLine, 70, 870, 70, BLACK);
  	DrawText(thirdLine, 70, 1050, 70, BLACK);
 
-	if (!imageIsLoad)
-	{
-		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-
-		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
-		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
-
-		imageIsLoad = true;
-	}
-
 	if (positionInCode == 2)
 	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
 	}
 
 	if (positionInCode == 4)
@@ -123,8 +105,8 @@ void Battle::BattleTrainerDraw()
 
 	if (positionInCode >= 5 && (positionInCode != 13 || !opponentPokemonIsDead))
 	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
-		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
+		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
+		DrawTexture(*mPlayerPokemon->GetPokemonTexture(), 50, 200, WHITE);
 
 		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
 		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
@@ -169,8 +151,6 @@ Pokemon Battle::ChooseOpponentPokemon()
 	int randomPokemon = rand() % pokemonTeam.size();
 	mOpponnentPokemon = &pokemonTeam[randomPokemon];
 
-	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
-
 	secondLine = mOpponentTrainer->Introduction();
 
 	positionInCode = 1;
@@ -194,7 +174,6 @@ void Battle::BattleAgainstTrainer(Pokemon& opponentPokemon)
 	if (positionInCode == 4)
 	{
 		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-		playerPokemonImage = *(mPlayerPokemon->GetPokemonImage());
 		positionInCode = 5;
 	}
 	
@@ -399,11 +378,6 @@ void Battle::BattleCaptureUpdate()
 	if (positionInCode == 3)
 	{
 		firstLine = "";
-		if (!imageIsUnload)
-		{
-			UnloadTexture(opponentPokemonTexture);
-			imageIsUnload = true;
-		}
 	}
 
 	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && positionInCode != 6 &&
@@ -451,20 +425,9 @@ void Battle::BattleCaptureDraw()
 	DrawText(secondLine, 70, 870, 70, BLACK);
 	DrawText(thirdLine, 70, 1050, 70, BLACK);
 
-	if (!imageIsLoad)
-	{
-		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-
-		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
-		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
-
-		imageIsLoad = true;
-	}
-
 	if (positionInCode == 2)
 	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
 	}
 
 	if (positionInCode == 4)
@@ -474,8 +437,8 @@ void Battle::BattleCaptureDraw()
 
 	if (positionInCode >= 5 && (positionInCode != 12 || !opponentPokemonIsDead))
 	{
-		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
-		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
+		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
+		DrawTexture(*mPlayerPokemon->GetPokemonTexture(), 50, 200, WHITE);
 
 		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
 		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
@@ -563,13 +526,11 @@ Pokemon Battle::ChoosePokemonToCapture()
 
 
 	srand(time(NULL));
-	int randomPokemon = rand() % allPokemons.size();
-	mOpponnentPokemon = &allPokemons[randomPokemon];
+	int randomPokemon = rand() % AllPokemons::allPokemons.size();
+	mOpponnentPokemon = &AllPokemons::allPokemons[randomPokemon];
 
 	//*************************************************************TO ERASE******************************************************
 	//mOpponnentPokemon = &allPokemons[9];
-
-	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
 
 	positionInCode = 1;
 	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
@@ -594,7 +555,6 @@ void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 	if (positionInCode == 4)
 	{
 		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-		playerPokemonImage = *(mPlayerPokemon->GetPokemonImage());
 		positionInCode = 5;
 	}
 
@@ -814,12 +774,14 @@ void Battle::CapturePokemon()
 	{
 		if (mThePlayer->IsPokemonCaptured(*mOpponnentPokemon))
 		{
-			cout << mPlayerPokemon->GetPokemonName() << endl;
-			//mPlayerPokemon = 
-			firstLine = TextFormat("You have managed to capture %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
-			secondLine = TextFormat("%s is now part of your team !", mOpponnentPokemon->GetPokemonName().c_str());
+			//cout << mPlayerPokemon->GetPokemonName() << endl;
 
 			hasManagedToCapture = true;
+			positionInCode = 9;
+			//battleIsFinished = true;
+			//return; 
+
+			//mPlayerPokemon = 
 		}
 		else
 		{
@@ -830,6 +792,12 @@ void Battle::CapturePokemon()
 	}
 
 	if (positionInCode == 9 && hasManagedToCapture)
+	{
+		firstLine = TextFormat("You have managed to capture %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
+		secondLine = TextFormat("%s is now part of your team !", mOpponnentPokemon->GetPokemonName().c_str());
+	}
+
+	if(positionInCode == 10 && hasManagedToCapture)
 	{
 		firstLine = "";
 		secondLine = "";

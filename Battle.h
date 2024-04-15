@@ -7,8 +7,8 @@
 class Battle
 {
 private:
-	Trainer* mThePlayer;
-	Trainer* mOpponentTrainer;
+	Trainer* mThePlayer = nullptr;
+	Trainer* mOpponentTrainer = nullptr;
 	Ability mOpponentPokemonAbility;
 	Pokemon* mOpponnentPokemon = nullptr;
 	Pokemon* mPlayerPokemon = nullptr;
@@ -16,6 +16,7 @@ private:
 	int mNuberOfTimeAbiityWasUsed = 0;
 
 public:
+	Battle();
 	Battle(Trainer& thePlayer);
 	Battle(Trainer& thePlayer, Trainer& opponentTrainer);
 

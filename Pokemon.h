@@ -11,7 +11,7 @@ using namespace std;
 class Pokemon
 {
 private:
-	Image mImagePokemon;
+	Texture2D mTexturePokemon;
 	string mName;
 	string mDescription;
 	PokeType mType;
@@ -25,7 +25,7 @@ private:
 
 public:
 	Pokemon();
-	Pokemon(Image imagePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie);
+	Pokemon(Texture2D texturePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie);
 
 	void UpdatePokemon();
 	void DrawPokemon();
@@ -41,7 +41,7 @@ public:
 
 	const vector<Ability>& GetAbilities() const;
 	string GetPokemonName() const;
-	Image* GetPokemonImage();
+	Texture2D* GetPokemonTexture();
 	float GetPokemonLife() const;
 	float GetPokemonMaxLife() const;
 	float GetPokemonDamage() const;

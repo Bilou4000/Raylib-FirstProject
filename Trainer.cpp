@@ -18,14 +18,13 @@ int answer = NULL;
 Rectangle changePokemonBox { 0 , 55, 1600, 1200 / 2 };
 Rectangle answerBox { 1300, 860, 80, 70 };
 
-vector<Texture2D> allPokemonsTexture;
-
 Trainer::Trainer()
 {
 	mFirstName = "Arthur";
 	mLastName = "Cathelain";
 	mCatchPhrase = "Nothing in life is equivalent to the beauty of splines";
-	mPokemonTeam = { Diglett };
+	mPokemonTeam = { AllPokemons::Diglett };
+	mPokemonTeam.reserve( 6 );
 }
 
 Trainer::Trainer(string firstName, string lastName, string CatchPhrase, vector<Pokemon> PokemonTeam)
@@ -34,6 +33,7 @@ Trainer::Trainer(string firstName, string lastName, string CatchPhrase, vector<P
 	mLastName = lastName;
 	mCatchPhrase = CatchPhrase;
 	mPokemonTeam = PokemonTeam;
+	mPokemonTeam.reserve( 6 );
 }
 
 void Trainer::UpdateTrainer()
@@ -105,22 +105,9 @@ void Trainer::DrawTrainer()
 		float pokemonPosition = 50;
 		float pokemonNamePosition = 70;
 
-		if (!pokemonImageIsLoad) 
-		{
-			int spacing = 0;
-			for (int i = 0; i < mPokemonTeam.size(); i++)
-			{
-				ImageFormat(mPokemonTeam[i].GetPokemonImage(), PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
-				Texture2D onePokemonTexture = LoadTextureFromImage(*(mPokemonTeam[i].GetPokemonImage()));
-				
-				allPokemonsTexture.push_back(onePokemonTexture);
-			}
-			pokemonImageIsLoad = true;
-		}
-
 		for (int i = 0; i < mPokemonTeam.size(); i++)
 		{
-			DrawTextureEx(allPokemonsTexture[i], {pokemonPosition, 250}, 0, 0.6f, WHITE);
+			DrawTextureEx(*mPokemonTeam[i].GetPokemonTexture(), {pokemonPosition, 250}, 0, 0.6f, WHITE);
 			DrawText(TextFormat("%i. %s ", i + 1, mPokemonTeam[i].GetPokemonName().c_str()), pokemonPosition, 550, 35, BLACK);
 			pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
 		}
