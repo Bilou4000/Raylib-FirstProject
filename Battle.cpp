@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include <string>
 #include "raylib.h"
 
 #include "Battle.h"
@@ -15,6 +16,11 @@ const char* toChangeLine = "";
 bool imageIsLoad = true, imageIsUnload = false, battleIsFinished = false;
 bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, pokemonIsLevelingUp = false, canLearnNewAbility = true;
 int positionInCode = 0;
+
+Rectangle captureAnswerBox { 780, 1060, 80, 70 };
+int captureBoxInput = NULL;
+int answerCapture = NULL;
+int isCapturing = -1;
 
 Image playerPokemonImage = LoadImage("resources/white.png");
 Image opponentPokemonImage = LoadImage("resources/white.png");
@@ -36,7 +42,7 @@ Battle::Battle(Trainer& thePlayer, Trainer& opponentTrainer)
 	mMaxAbilityCost = 5;
 }
 
-void Battle::BattleUpdate()
+void Battle::BattleTrainerUpdate()
 {
 	mThePlayer->UpdateTrainer();
 	mPlayerPokemon->UpdatePokemon();
@@ -82,7 +88,65 @@ void Battle::BattleUpdate()
 	}
 }
 
-void Battle::BattleDraw()
+void Battle::BattleCaptureUpdate()
+{
+	mThePlayer->UpdateTrainer();
+	mPlayerPokemon->UpdatePokemon();
+
+	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
+	{
+		firstLine = toChangeLine;
+		secondLine = "";
+		imageIsLoad = false;
+	}
+
+	if (positionInCode == 3)
+	{
+		firstLine = "";
+		if (!imageIsUnload)
+		{
+			UnloadTexture(opponentPokemonTexture);
+			imageIsUnload = true;
+		}
+	}
+
+	if (IsKeyPressed(KEY_SPACE) && positionInCode != 3 && positionInCode != 4 && positionInCode != 6 && 
+		!pokemonCanUseAbility && !pokemonIsLevelingUp)
+	{
+		positionInCode++;
+	}
+
+	if (mThePlayer->GetAnswerTrainer() > 0 && positionInCode == 3)
+	{
+		positionInCode = 4;
+	}
+
+	if (positionInCode == 6)
+	{
+		UpdateChooseIfCapture();
+
+		if (isCapturing != -1)
+		{
+			positionInCode = 7;
+		}
+	}
+
+	if (positionInCode == 7)
+	{
+		cout << "qsfqsfqsf" << endl;
+		if (mPlayerPokemon->GetAnswerPokemon() > 0)
+		{
+			positionInCode = 8;
+		}
+	}
+
+	if (positionInCode == 14 && mPlayerPokemon->GetAnswerPokemon() > 0)
+	{
+		positionInCode = 15;
+	}
+}
+
+void Battle::BattleTrainerDraw()
 {
 	mThePlayer->DrawTrainer();
 	mPlayerPokemon->DrawPokemon();
@@ -138,6 +202,114 @@ void Battle::BattleDraw()
 	}
 }
 
+void Battle::BattleCaptureDraw()
+{
+	mThePlayer->DrawTrainer();
+	mPlayerPokemon->DrawPokemon();
+
+	DrawText(firstLine, 70, 775, 70, BLACK);
+	DrawText(secondLine, 70, 870, 70, BLACK);
+	DrawText(thirdLine, 70, 1050, 70, BLACK);
+
+	if (!imageIsLoad)
+	{
+		ImageFormat(&opponentPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+		ImageFormat(&playerPokemonImage, PIXELFORMAT_UNCOMPRESSED_R8G8B8A8);
+
+		opponentPokemonTexture = LoadTextureFromImage(opponentPokemonImage);
+		playerPokemonTexture = LoadTextureFromImage(playerPokemonImage);
+
+		imageIsLoad = true;
+	}
+
+	if (positionInCode == 2)
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+	}
+
+	if (positionInCode == 4)
+	{
+		imageIsLoad = false;
+	}
+
+	if (positionInCode >= 5 && (positionInCode != 14 || !opponentPokemonIsDead))
+	{
+		DrawTexture(opponentPokemonTexture, 1080, 30, WHITE);
+		DrawTexture(playerPokemonTexture, 50, 200, WHITE);
+
+		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
+
+		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
+		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);
+	}
+
+	if (positionInCode == 5)
+	{
+		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+	}
+
+	if (positionInCode == 6)
+	{
+		DrawChooseIfCapture();
+	}
+
+	if (positionInCode == 16)
+	{
+		const Ability& newAbility = mPlayerPokemon->GetAbilities()[mPlayerPokemon->GetAbilities().size() - 1];
+		firstLine = TextFormat("%s has now learned", mPlayerPokemon->GetPokemonName().c_str());
+		DrawText(TextFormat("%s", newAbility.GetName().c_str()), 70, 900, 90, RED);
+		return;
+	}
+}
+
+void Battle::DrawChooseIfCapture()
+{
+	firstLine = "Do you wish to try to :";
+	secondLine = TextFormat("1. Capture %s ", mOpponnentPokemon->GetPokemonName().c_str());
+	DrawText(TextFormat("2. Attack %s", mOpponnentPokemon->GetPokemonName().c_str()), 70, 970, 70, BLACK);
+	DrawText("Write the corresponding number :", 70, 1070, 40, RED);
+
+	DrawRectangleRec(captureAnswerBox, LIGHTGRAY);
+
+	if (isdigit(captureBoxInput))
+	{
+		string printAnswer { (char) captureBoxInput };
+		DrawText(TextFormat("%s", printAnswer.c_str()), 800, 1065, 70, BLACK);
+
+		answerCapture = stoi(printAnswer);
+	}
+	else
+	{
+		DrawText("_", 800, 1065, 70, BLACK);
+	}
+}
+
+void Battle::UpdateChooseIfCapture()
+{
+	if (GetKeyPressed())
+	{
+		captureBoxInput = GetCharPressed();
+	}
+
+	if (IsKeyPressed(KEY_ENTER) && answerCapture > 0 && answerCapture <= 2)
+	{
+		if (answerCapture == 1)
+		{
+			isCapturing = true;
+			//CapturePokemon();
+			//positionInCode = 7;
+		}
+		else if (answerCapture == 2)
+		{
+			isCapturing = false;
+			//AttackPokemon();
+			//positionInCode = 7;
+		}
+	}
+}
+
+
 Pokemon Battle::ChooseOpponentPokemon()
 {
 	Pokemon* mOpponnentPokemon = nullptr;
@@ -176,13 +348,21 @@ Pokemon Battle::ChoosePokemonToCapture()
 
 	mMaxAbilityCost = 30;
 
+	battleIsFinished = false;
+	opponentPokemonIsDead = false;
+	pokemonCanUseAbility = false;
+	pokemonIsLevelingUp = false;
+	canLearnNewAbility = true;
+
+	positionInCode = 0; 
+	firstLine = "You stumble in a battle !";
+
+
 	srand(time(NULL));
 	int randomPokemon = rand() % allPokemons.size();
 	mOpponnentPokemon = &allPokemons[randomPokemon];
 
 	opponentPokemonImage = *(mOpponnentPokemon->GetPokemonImage());
-
-	secondLine = mOpponentTrainer->Introduction();
 
 	positionInCode = 1;
 	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
@@ -394,38 +574,32 @@ bool Battle::EndOfBattle()
 
 
 
-void Battle::BattleAgainstPokemon(bool firstTime)
+void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 {
-	Pokemon* mPlayerPokemon = nullptr;
-	Pokemon* mOpponnentPokemon = nullptr;
+	cout << positionInCode << endl;
 
-	if (firstTime == true)
+	mOpponnentPokemon = &opponentPokemon;
+
+	if (positionInCode == 3)
 	{
-		mMaxAbilityCost = 30;
-
-		int randomPokemon = rand() % allPokemons.size();
-		mOpponnentPokemon = &allPokemons[randomPokemon];
-
-		cout << "You have encounter a wild " << mOpponnentPokemon->GetPokemonName() << endl;
-
-		//mUsedOpponentPokemon = *mOpponnentPokemon;
-
-		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-	}
-	else
-	{
-		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
-
-		if (mPlayerPokemon->GetPokemonLife() <= 0)
-		{
-			cout << "This pokemon is already dead, please choose an other pokemon" << endl;
-			return BattleAgainstPokemon(false);
-		}
+		firstLine = "";
+		secondLine = "";
+		mThePlayer->ChoosePokemonToUse();
 	}
 
+	if (positionInCode == 4)
+	{
+		mPlayerPokemon = &mThePlayer->SendOrChangePokemon();
+		playerPokemonImage = *(mPlayerPokemon->GetPokemonImage());
+		positionInCode = 5;
+	}
 
-	//mOpponnentPokemon = &mUsedOpponentPokemon;
+	if (positionInCode >= 7 && !isCapturing)
+	{
+		AttackPokemon();
+	}
 
+	return;
 
 	while (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 	{
@@ -501,19 +675,212 @@ void Battle::BattleAgainstPokemon(bool firstTime)
 		return;
 	}
 
-	if (mPlayerPokemon->GetPokemonLife() <= 0)
+	//if (mPlayerPokemon->GetPokemonLife() <= 0)
+	//{
+	//	cout << "\nYour pokemon has been defeated, he now has " << mPlayerPokemon->GetPokemonLife() << "pv" << endl;
+
+	//	if (mThePlayer->CheckIfTeamDead())
+	//	{
+	//		return;
+	//	}
+	//	if (!mThePlayer->CheckIfTeamDead())
+	//	{
+	//		//mDeadPlayerPokemon = *mPlayerPokemon;
+
+	//		return BattleAgainstPokemon(false);
+	//	}
+	//}
+}
+
+void Battle::AttackPokemon()
+{
+	if (positionInCode == 7)
 	{
-		cout << "\nYour pokemon has been defeated, he now has " << mPlayerPokemon->GetPokemonLife() << "pv" << endl;
-
-		if (mThePlayer->CheckIfTeamDead())
+		if (mOpponnentPokemon->GetPokemonLife() > 0 && mPlayerPokemon->GetPokemonLife() > 0)
 		{
-			return;
-		}
-		if (!mThePlayer->CheckIfTeamDead())
-		{
-			//mDeadPlayerPokemon = *mPlayerPokemon;
+			if (mPlayerPokemon->CheckIfCanUseAbility())
+			{
+				firstLine = "";
+				secondLine = "";
 
-			return BattleAgainstPokemon(false);
+				pokemonCanUseAbility = true;
+			}
+			else
+			{
+				pokemonCanUseAbility = false;
+
+				firstLine = "Your pokemon can't use any more skill, ";
+				secondLine = "Please change it.";
+			}
 		}
 	}
+
+	if (positionInCode == 8 && !pokemonCanUseAbility)
+	{
+		positionInCode = 3;
+		captureBoxInput = NULL;
+		answerCapture = NULL;
+		isCapturing = -1;
+
+		return BattleAgainstPokemon(*mOpponnentPokemon);
+	}
+	else if (positionInCode == 8 && pokemonCanUseAbility)
+	{
+		mPlayerPokemon->AttackOtherPokemon(*mOpponnentPokemon);
+
+		positionInCode = 9;
+	}
+
+	if (positionInCode == 9)
+	{
+		firstLine = TextFormat("You did %i damage to %s", (int) mOpponnentPokemon->GetPokemonDamage(), mOpponnentPokemon->GetPokemonName().c_str());
+		pokemonCanUseAbility = false;
+	}
+
+	if (positionInCode == 10 && mOpponnentPokemon->GetPokemonLife() <= 0)
+	{
+		opponentPokemonIsDead = true;
+		firstLine = "YOU HAVE WON THE FIGHT !!";
+	}
+	else if (positionInCode == 10 && mOpponnentPokemon->GetPokemonLife() > 0)
+	{
+		srand(time(NULL));
+		const vector<Ability>& abilities = mOpponnentPokemon->GetAbilities();
+		int randomAbility = rand() % abilities.size();
+		mOpponentPokemonAbility = abilities[randomAbility];
+
+		mPlayerPokemon->TakeDamage(mOpponentPokemonAbility.GetDamage(), mOpponentPokemonAbility);
+		positionInCode = 11;
+	}
+
+	if (positionInCode == 11 && !opponentPokemonIsDead)
+	{
+		firstLine = TextFormat("%s used %s", mOpponnentPokemon->GetPokemonName().c_str(), mOpponentPokemonAbility.GetName().c_str());
+		secondLine = TextFormat("it did %i damage to you", (int) mPlayerPokemon->GetPokemonDamage());
+	}
+
+	if (positionInCode == 12 && !opponentPokemonIsDead)
+	{
+		if (mThePlayer->CheckIfTeamDead())
+		{
+			firstLine = "All your pokemons are dead";
+			secondLine = "You have lost the fight";
+
+			positionInCode = 13;
+		}
+		else
+		{
+			firstLine = "Your pokemon just died.";
+			secondLine = "Please change it";
+
+			//**************************************************************************************************************************
+			positionInCode = 7;
+			captureBoxInput = NULL;
+			answerCapture = NULL;
+			isCapturing = -1;
+
+			return BattleAgainstPokemon(*mOpponnentPokemon);
+		}
+	}
+
+	if (opponentPokemonIsDead && positionInCode == 11)
+	{
+		if (mThePlayer->WinFight())
+		{
+			firstLine = "You won 100 gold";
+
+			string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
+			secondLine = temp->c_str();
+			positionInCode = 12;
+		}
+		else
+		{
+			firstLine = "You won 2 new Pokeballs";
+
+			string* temp = new string(TextFormat("you now have %i Pokeballs", mThePlayer->GetPokeballs()));
+			secondLine = temp->c_str();
+			positionInCode = 12;
+		}
+
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
+	}
+
+	if (positionInCode == 13 && opponentPokemonIsDead)
+	{
+		if (mPlayerPokemon->GetAbilities().size() >= 4)
+		{
+			canLearnNewAbility = false;
+			battleIsFinished = true;
+			return;
+		}
+
+		firstLine = "Your Pokemon is leveling up !!!";
+		secondLine = "You can now learn a new ability";
+	}
+
+	if (positionInCode == 14)
+	{
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
+	}
+
+
+	if (positionInCode == 14 && !opponentPokemonIsDead)
+	{
+		firstLine = "You just lost 70 gold,";
+
+		string* temp = new string(TextFormat("you now have %i gold", mThePlayer->GetMoney()));
+		secondLine = temp->c_str();
+	}
+	else if (positionInCode == 14 && opponentPokemonIsDead && canLearnNewAbility)
+	{
+		firstLine = "";
+		secondLine = "";
+
+		pokemonIsLevelingUp = true;
+
+		mPlayerPokemon->ChooseAbility();
+	}
+	else if (positionInCode == 14)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
+
+
+	if (positionInCode == 15 && !opponentPokemonIsDead)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
+
+	if (positionInCode == 15 && opponentPokemonIsDead)
+	{
+		mPlayerPokemon->LearnNewAbilities();
+		pokemonIsLevelingUp = false;
+		positionInCode = 16;
+	}
+
+	if (positionInCode == 17)
+	{
+		firstLine = "";
+		secondLine = "";
+		battleIsFinished = true;
+		return;
+	}
+
+	return;
+}
+
+void Battle::CapturePokemon()
+{
 }

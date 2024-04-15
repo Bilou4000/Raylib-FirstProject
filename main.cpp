@@ -24,7 +24,7 @@ Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 
-vector<Pokemon> firstTeam = { Pancham, Minun, Plusle, Mewtwo };
+vector<Pokemon> firstTeam = { Pancham, Minun, Plusle, Mewtwo, Magikarp };
 vector<Pokemon> secondTeam = { Copperajah, Snorlax, Magikarp };
 
 //Pansage, Minun, Vanillite, Snorlax, Magikarp,
@@ -33,7 +33,7 @@ Trainer firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow
 Trainer secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam);
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
 
-Battle theBattle = Battle(firstTrainer, secondTrainer);
+Battle theBattle = Battle(firstTrainer, secondTrainer); 
 Pokemon opponentPokemon = Pokemon();
 bool isInCombat = false;
 
@@ -93,7 +93,19 @@ void Update()
         break;
         case ATTACKPOKEMON:
         {
-            //
+            if (!isInCombat)
+            {
+                opponentPokemon = theBattle.ChoosePokemonToCapture();
+                isInCombat = true;
+            }
+
+            theBattle.BattleAgainstPokemon(opponentPokemon);
+            theBattle.BattleCaptureUpdate();
+
+            if (theBattle.EndOfBattle())
+            {
+                currentScreen = STROLL;
+            }
         }
         break;
         case ATTACKTRAINER:
@@ -105,7 +117,7 @@ void Update()
             }
 
             theBattle.BattleAgainstTrainer(opponentPokemon);
-            theBattle.BattleUpdate();
+            theBattle.BattleTrainerUpdate();
 
             if (theBattle.EndOfBattle())
             {
@@ -134,9 +146,7 @@ void Update()
 
 void StrollingAround()
 {
-
     mouseOnPathBox = true;
-
 
     if (mouseOnPathBox && GetKeyPressed())
     {
@@ -207,12 +217,13 @@ void Draw()
         case ATTACKPOKEMON:
         {
             DrawRectangleRec(TextBox, WHITE);
+            theBattle.BattleCaptureDraw();
         }
         break;
         case ATTACKTRAINER:
         {
             DrawRectangleRec(TextBox, WHITE);
-            theBattle.BattleDraw();
+            theBattle.BattleTrainerDraw();
         }
         break;
         case ENDING:

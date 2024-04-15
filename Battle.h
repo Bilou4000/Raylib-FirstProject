@@ -19,14 +19,22 @@ public:
 	Battle(Trainer& thePlayer);
 	Battle(Trainer& thePlayer, Trainer& opponentTrainer);
 
-	void BattleUpdate();
-	void BattleDraw();
+	void BattleTrainerUpdate();
+	void BattleTrainerDraw();
+
+	void BattleCaptureUpdate();
+	void BattleCaptureDraw();
+
+	void DrawChooseIfCapture();
+	void UpdateChooseIfCapture();
 
 	Pokemon ChooseOpponentPokemon();
 	Pokemon ChoosePokemonToCapture();
 	void BattleAgainstTrainer(Pokemon& opponentPokemon);
 	bool EndOfBattle();
 
-	void BattleAgainstPokemon(bool firstTime);
+	void BattleAgainstPokemon(Pokemon& opponentPokemon);
+	void AttackPokemon();
+	void CapturePokemon();
 };
 
