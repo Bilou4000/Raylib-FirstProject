@@ -70,11 +70,11 @@ void Load()
 
     AllPokemons::Load();
 
-    firstTeam = { AllPokemons::Minun, AllPokemons::Magikarp, };
+    firstTeam = { AllPokemons::Minun, AllPokemons::Darumaka };
     secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
 
     firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
-    secondTrainer = Trainer("Jean", "Louis", "OHOHOHOHOHOH !!!", secondTeam); 
+    secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
 
     theBattle = Battle(firstTrainer, secondTrainer);
 }
