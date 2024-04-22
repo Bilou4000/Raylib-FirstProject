@@ -520,17 +520,18 @@ Pokemon Battle::ChoosePokemonToCapture()
 	pokemonCanUseAbility = false;
 	pokemonIsLevelingUp = false;
 	canLearnNewAbility = true;
+	canCapture = true;
+	hasManagedToCapture = true;
+	captureBoxInput = NULL;
+	answerCapture = NULL;
+	isCapturing = -1;
 
 	positionInCode = 0;
 	firstLine = "You stumble in a battle !";
 
-
 	srand(time(NULL));
 	int randomPokemon = rand() % AllPokemons::allPokemons.size();
 	mOpponnentPokemon = &AllPokemons::allPokemons[randomPokemon];
-
-	//*************************************************************TO ERASE******************************************************
-	//mOpponnentPokemon = &allPokemons[9];
 
 	positionInCode = 1;
 	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
@@ -540,9 +541,6 @@ Pokemon Battle::ChoosePokemonToCapture()
 
 void Battle::BattleAgainstPokemon(Pokemon& opponentPokemon)
 {
-	//********************************************************************************************************************
-	cout << positionInCode << endl;
-
 	mOpponnentPokemon = &opponentPokemon;
 
 	if (positionInCode == 3)
@@ -774,14 +772,8 @@ void Battle::CapturePokemon()
 	{
 		if (mThePlayer->IsPokemonCaptured(*mOpponnentPokemon))
 		{
-			//cout << mPlayerPokemon->GetPokemonName() << endl;
-
 			hasManagedToCapture = true;
 			positionInCode = 9;
-			//battleIsFinished = true;
-			//return; 
-
-			//mPlayerPokemon = 
 		}
 		else
 		{
@@ -795,6 +787,11 @@ void Battle::CapturePokemon()
 	{
 		firstLine = TextFormat("You have managed to capture %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
 		secondLine = TextFormat("%s is now part of your team !", mOpponnentPokemon->GetPokemonName().c_str());
+
+		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)
+		{
+			mThePlayer->GetPokemonTeam()[i].Rest();
+		}
 	}
 
 	if(positionInCode == 10 && hasManagedToCapture)
