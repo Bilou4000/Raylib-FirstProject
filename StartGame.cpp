@@ -9,7 +9,7 @@ void StartGame::Init()
     mAnswerPk = NULL;
     mBoxInput = NULL;
 
-    mStarterPokemons = { AllPokemons::Cleffa, AllPokemons::Pansage, AllPokemons::Magikarp };
+    mStarterPokemons = { AllPokemons::Pansage, AllPokemons::Darumaka, AllPokemons::Magikarp };
 }
 
 bool StartGame::Update()
