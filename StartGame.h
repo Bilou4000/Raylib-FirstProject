@@ -40,6 +40,7 @@ private:
 	Rectangle mNameAnswerBox {};
 
 	Rectangle mPkAnswerBox { 780, 950, 80, 70 };
+	Rectangle mChangePokemonBox { 0, 55, 1600, 1200 / 2 };
 	vector<Pokemon> mStarterPokemons;
 };
 

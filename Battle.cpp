@@ -659,7 +659,13 @@ void Battle::AttackPokemon()
 		{
 			if (mPlayerPokemon->GetPokemonLife() > 0)
 			{
-				positionInCode = 7;
+				positionInCode = 6;
+				pokemonCanUseAbility = false;
+				captureBoxInput = NULL;
+				answerCapture = NULL;
+				isCapturing = -1;
+
+				return BattleAgainstPokemon(*mOpponnentPokemon);
 			}
 			else
 			{

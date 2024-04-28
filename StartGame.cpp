@@ -9,7 +9,7 @@ void StartGame::Init()
     mAnswerPk = NULL;
     mBoxInput = NULL;
 
-    mStarterPokemons = { AllPokemons::Cleffa, AllPokemons::Vanillite, AllPokemons::Magikarp };
+    mStarterPokemons = { AllPokemons::Cleffa, AllPokemons::Pansage, AllPokemons::Magikarp };
 }
 
 bool StartGame::Update()
@@ -52,19 +52,11 @@ void StartGame::ChooseName()
         mName[mNameLetterCount] = '\0';
         mInput = 2;
     }
-    if (mInput == 3)
-    {
-        mLastName = mName;
-        mNameLetterCount = 0;
-        mName[mNameLetterCount] = '\0';
-        mInput = 4;
-    }
 
     int key = GetCharPressed();
 
     while (key > 0)
     {
-        // NOTE: Only allow keys in range [32..125]
         if ((key >= 32) && (key <= 125) && (mNameLetterCount < MAX_INPUT_CHARS))
         {
             mName[mNameLetterCount] = (char) key;
@@ -93,6 +85,14 @@ void StartGame::ChooseName()
 
 bool StartGame::ChoosePokemon()
 {
+    if (mInput == 3)
+    {
+        mLastName = mName;
+        mNameLetterCount = 0;
+        mName[mNameLetterCount] = '\0';
+        mInput = 4;
+    }
+
     if (GetKeyPressed())
     {
         mBoxInput = GetCharPressed();
@@ -154,6 +154,9 @@ void StartGame::DrawName()
 
 void StartGame::DrawPokemon()
 {
+    DrawRectangleRec(mChangePokemonBox, WHITE);
+    DrawText("You can choose one of this 3 pokemons :", 70, 125, 70, BLACK);
+
     DrawText(TextFormat("Hello to you, %s %s !!!", mFirstName.c_str(), mLastName.c_str()), 70, 775, 70, BLACK);
     DrawText("Choose your starter Pokemon now. ", 70, 875, 70, BLACK);
     DrawText("Write the corresponding number :", 70, 970, 40, RED);
