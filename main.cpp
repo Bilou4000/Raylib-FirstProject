@@ -73,10 +73,10 @@ void Load()
     startGame.Init();
 
     //--------------------------------------TO CHANGE -------------------------------------------------------------------
-    firstTeam = { AllPokemons::Minun, AllPokemons::Darumaka };
+    //firstTeam = { AllPokemons::Minun, AllPokemons::Darumaka };
     secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
 
-    firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
+    //firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
     secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
 
     theBattle = Battle(firstTrainer, secondTrainer);
@@ -99,6 +99,16 @@ void Update()
         case START:
         {
             startGame.Update();
+            if (startGame.Update())
+            {
+                string firstName = startGame.mFirstName;
+                string lastName = startGame.mLastName;
+
+                firstTeam.push_back(startGame.mPlayerPokemon);
+
+                firstTrainer = Trainer(firstName, lastName, "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
+                currentScreen = STROLL;
+            }
         }
         case STROLL:
         {

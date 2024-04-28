@@ -5,9 +5,14 @@ void StartGame::Init()
     mNameAnswerBox = { GetScreenWidth() / 2.0f - 262.5f, 250, 525, 100 };
 	mInput = 0;
 	mNameLetterCount = 0;
+
+    mAnswerPk = NULL;
+    mBoxInput = NULL;
+
+    mStarterPokemons = { AllPokemons::Cleffa, AllPokemons::Vanillite, AllPokemons::Magikarp };
 }
 
-void StartGame::Update()
+bool StartGame::Update()
 {
     if (mInput < 3)
     {
@@ -16,7 +21,13 @@ void StartGame::Update()
     else
     {
         ChoosePokemon();
+        if (ChoosePokemon())
+        {
+            return true;
+        }
     }
+
+    return false;
 }
 
 void StartGame::Draw()
@@ -80,7 +91,7 @@ void StartGame::ChooseName()
     }
 }
 
-void StartGame::ChoosePokemon()
+bool StartGame::ChoosePokemon()
 {
     if (GetKeyPressed())
     {
@@ -89,15 +100,24 @@ void StartGame::ChoosePokemon()
 
     if (IsKeyPressed(KEY_ENTER) && mAnswerPk > 0 && mAnswerPk <= 3)
     {
-        //if (answerPath == 1)
-        //{
-        //    currentScreen = ATTACKTRAINER;
-        //}
-        //else if (answerPath == 2)
-        //{
-        //    currentScreen = ATTACKPOKEMON;
-        //}
+        if (mAnswerPk == 1)
+        {
+            mPlayerPokemon = mStarterPokemons[0];
+            return true;
+        }
+        else if (mAnswerPk == 2)
+        {
+            mPlayerPokemon = mStarterPokemons[1];
+            return true;
+        }
+        else if (mAnswerPk == 3)
+        {
+            mPlayerPokemon = mStarterPokemons[2];
+            return true;
+        }
     }
+
+    return false;
 }
 
 void StartGame::DrawName()
@@ -137,4 +157,29 @@ void StartGame::DrawPokemon()
     DrawText(TextFormat("Hello to you, %s %s !!!", mFirstName.c_str(), mLastName.c_str()), 70, 775, 70, BLACK);
     DrawText("Choose your starter Pokemon now. ", 70, 875, 70, BLACK);
     DrawText("Write the corresponding number :", 70, 970, 40, RED);
+
+    DrawRectangleRec(mPkAnswerBox, LIGHTGRAY);
+
+    if (isdigit(mBoxInput))
+    {
+        string printAnswer { (char) mBoxInput };
+        DrawText(TextFormat("%s", printAnswer.c_str()), 800, 955, 70, BLACK);
+
+        mAnswerPk = stoi(printAnswer);
+    }
+    else
+    {
+        DrawText("_", 800, 955, 70, BLACK);
+    }
+
+
+    float pokemonPosition = 50;
+    float pokemonNamePosition = 70;
+
+    for (int i = 0; i < mStarterPokemons.size(); i++)
+    {
+        DrawTextureEx(*mStarterPokemons[i].GetPokemonTexture(), { pokemonPosition, 250 }, 0, 0.6f, WHITE);
+        DrawText(TextFormat("%i. %s ", i + 1, mStarterPokemons[i].GetPokemonName().c_str()), pokemonPosition, 550, 35, BLACK);
+        pokemonPosition += GetScreenWidth() / mStarterPokemons.size();
+    }
 }

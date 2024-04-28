@@ -14,20 +14,22 @@ class StartGame
 {
 public:
 	void Init();
-	void Update();
+	bool Update();
 	void Draw();
 
 	void ChooseName();
-	void ChoosePokemon();
+	bool ChoosePokemon();
 
 	void DrawName();
 	void DrawPokemon();
 
-private:
+public:
 	string mFirstName = "";
 	string mLastName = "";
 
-	Rectangle mNameAnswerBox {};
+	Pokemon mPlayerPokemon;
+
+private:
 	char mName[MAX_INPUT_CHARS + 1] = "\0";
 	int mNameLetterCount = 0;
 	int mInput = 0;
@@ -35,9 +37,9 @@ private:
 	int mBoxInput = NULL;
 	int mAnswerPk = NULL;
 
-	Rectangle mPkAnswerBox { 780, 850, 80, 70 };
+	Rectangle mNameAnswerBox {};
 
-	Pokemon mPlayerPokemon;
-	vector<Pokemon> mStarterPokemons {};
+	Rectangle mPkAnswerBox { 780, 950, 80, 70 };
+	vector<Pokemon> mStarterPokemons;
 };
 
