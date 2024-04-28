@@ -785,7 +785,7 @@ void Battle::CapturePokemon()
 
 	if (positionInCode == 9 && hasManagedToCapture)
 	{
-		firstLine = TextFormat("You have managed to capture %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
+		firstLine = TextFormat("You have captured %s !!!", mOpponnentPokemon->GetPokemonName().c_str());
 		secondLine = TextFormat("%s is now part of your team !", mOpponnentPokemon->GetPokemonName().c_str());
 
 		for (int i = 0; i < mThePlayer->GetPokemonTeam().size(); i++)

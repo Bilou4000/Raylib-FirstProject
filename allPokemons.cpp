@@ -7,7 +7,7 @@ Pokemon AllPokemons::Pansage;
 Pokemon AllPokemons::Minun;
 Pokemon AllPokemons::Plusle;
 Pokemon AllPokemons::Vanillite;
-Pokemon AllPokemons::Pancham; //Just RollingKick
+Pokemon AllPokemons::Pancham;
 Pokemon AllPokemons::Gulpin;
 Pokemon AllPokemons::Diglett;
 Pokemon AllPokemons::Tornadus;

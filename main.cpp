@@ -2,9 +2,9 @@
 #include <string>
 
 #include "raylib.h"
-#include "allPokemons.h"
 #include "Trainer.h"
 #include "Battle.h"
+#include "StartGame.h"
 
 using namespace std;
 
@@ -12,9 +12,9 @@ typedef enum GameScreen { MENU, START, STROLL, ATTACKPOKEMON, ATTACKTRAINER, END
 GameScreen currentScreen;
 
 //Screen
-bool mouseOnPathBox;
 int screenWidth = 1600; //1600
 int screenHeight = 1200; //1200
+
 int boxInput = NULL;
 int answerPath = NULL;
 
@@ -23,7 +23,6 @@ Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
-
 vector<Pokemon> firstTeam;
 vector<Pokemon> secondTeam;
 
@@ -33,6 +32,8 @@ vector<Pokemon> secondTeam;
 Trainer firstTrainer;
 Trainer secondTrainer;
 //--------------------------------------TO CHANGE -------------------------------------------------------------------
+
+StartGame startGame;
 
 Battle theBattle; 
 Pokemon opponentPokemon = Pokemon();
@@ -69,7 +70,9 @@ void Load()
     SetTargetFPS(60);
 
     AllPokemons::Load();
+    startGame.Init();
 
+    //--------------------------------------TO CHANGE -------------------------------------------------------------------
     firstTeam = { AllPokemons::Minun, AllPokemons::Darumaka };
     secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
 
@@ -77,6 +80,7 @@ void Load()
     secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
 
     theBattle = Battle(firstTrainer, secondTrainer);
+    //--------------------------------------TO CHANGE -------------------------------------------------------------------
 }
 
 void Update() 
@@ -87,14 +91,14 @@ void Update()
         {
             if (IsKeyPressed(KEY_ENTER))
             {
-                //currentScreen = START;
-                currentScreen = STROLL;
+                currentScreen = START;
+                //currentScreen = STROLL;
             }
         }
         break;
         case START:
         {
-            //start of the game
+            startGame.Update();
         }
         case STROLL:
         {
@@ -157,9 +161,7 @@ void Update()
 
 void StrollingAround()
 {
-    mouseOnPathBox = true;
-
-    if (mouseOnPathBox && GetKeyPressed())
+    if (GetKeyPressed())
     {
         boxInput = GetCharPressed();
     }
@@ -193,7 +195,10 @@ void Draw()
         break;
         case START:
         {
-            //choose pokemon
+            DrawRectangleRec(TextBox, WHITE);
+
+            startGame.Draw();
+           
         }
         break;
         case STROLL:
@@ -209,19 +214,16 @@ void Draw()
 
             DrawRectangleRec(pathAnswerBox, LIGHTGRAY);
 
-            if (mouseOnPathBox)
+            if (isdigit(boxInput))
             {
-                if (isdigit(boxInput))
-                {
-                    string printAnswer{ (char)boxInput };
-                    DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
+                string printAnswer { (char) boxInput };
+                DrawText(TextFormat("%s", printAnswer.c_str()), 800, 855, 70, BLACK);
 
-                    answerPath = stoi(printAnswer);
-                }
-                else
-                {
-                    DrawText("_", 800, 855, 70, BLACK);
-                }
+                answerPath = stoi(printAnswer);
+            }
+            else
+            {
+                DrawText("_", 800, 855, 70, BLACK);
             }
         }
         break;

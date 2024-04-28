@@ -190,7 +190,7 @@ void Pokemon::DrawPokemon()
 		if (abilityIsTaken)
 		{
 			DrawText("You already have this ability. ", 70, 785, 60, BLACK);
-			DrawText("Please use an other one.", 70, 860, 60, BLACK);
+			DrawText("Please choose an other one.", 70, 860, 60, BLACK);
 		}
 		else
 		{

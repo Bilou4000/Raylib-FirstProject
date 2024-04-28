@@ -139,6 +139,7 @@
     <ClCompile Include="Battle.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Pokemon.cpp" />
+    <ClCompile Include="StartGame.cpp" />
     <ClCompile Include="Trainer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="Battle.h" />
     <ClInclude Include="Pokemon.h" />
     <ClInclude Include="PokeType.h" />
+    <ClInclude Include="StartGame.h" />
     <ClInclude Include="Trainer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

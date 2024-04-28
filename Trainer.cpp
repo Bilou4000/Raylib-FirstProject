@@ -127,13 +127,13 @@ const char* Trainer::ChallengeTrainer()
 
 bool Trainer::IsPokemonCaptured(Pokemon& pokemon)
 {
-	//float captureRate = (((1.0f + (((pokemon.GetPokemonMaxLife() * 3.0f) - (pokemon.GetPokemonLife() * 2.0f)) * 256.0f))
-	//	/ (pokemon.GetPokemonMaxLife() * 3.0f)) / 334.0f) * 100.0f;
+	float captureRate = (((1.0f + (((pokemon.GetPokemonMaxLife() * 3.0f) - (pokemon.GetPokemonLife() * 2.0f)) * 256.0f))
+		/ (pokemon.GetPokemonMaxLife() * 3.0f)) / 334.0f) * 100.0f;
 
-	//if (captureRate <= 50)
-	//{
-	//	return false;
-	//}
+	if (captureRate <= 50)
+	{
+		return false;
+	}
 
 	mPokemonTeam.push_back(pokemon);
 	mPokeballs -= 1;
