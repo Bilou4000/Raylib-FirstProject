@@ -92,7 +92,6 @@ void Update()
             if (IsKeyPressed(KEY_ENTER))
             {
                 currentScreen = START;
-                //currentScreen = STROLL;
             }
         }
         break;
