@@ -2,9 +2,9 @@
 #include <string>
 
 #include "raylib.h"
-#include "Trainer.h"
 #include "Battle.h"
 #include "StartGame.h"
+#include "allTrainers.h"
 
 using namespace std;
 
@@ -22,6 +22,7 @@ int answerPath = NULL;
 Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
+//player and opponent
 vector<Pokemon> firstTeam;
 vector<Pokemon> secondTeam;
 
@@ -65,11 +66,13 @@ void Load()
     SetTargetFPS(60);
 
     AllPokemons::Load();
+    allTrainer::Init();
     startGame.Init();
 
+
     //--------------------------------------TO CHANGE -------------------------------------------------------------------
-    secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
-    secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
+    //secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
+    //secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
 
     //--------------------------------------TO CHANGE -------------------------------------------------------------------
     theBattle = Battle(firstTrainer, secondTrainer);
@@ -106,6 +109,10 @@ void Update()
         {
             isInCombat = false;
             StrollingAround();
+
+            srand(time(NULL));
+            int randomTrainer = rand() % allTrainer::mAllTrainers.size();
+            secondTrainer = allTrainer::mAllTrainers[randomTrainer];
         }
         break;
         case ATTACKPOKEMON:
