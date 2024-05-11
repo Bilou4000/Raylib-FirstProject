@@ -27,6 +27,7 @@ Pokemon::Pokemon()
 {
 	mName = "Minum";
 	mDescription = "Promotes blood circulation and relieves muscular tension.";
+	mTypeName = "Electric";
 	mType = PokeType::Electric;
 	mLevel = 1;
 	mLife = 60;
@@ -34,12 +35,13 @@ Pokemon::Pokemon()
 	mAbilities = { Thunder, Aeroblast };
 }
 
-Pokemon::Pokemon(Texture2D texturePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie)
+Pokemon::Pokemon(Texture2D texturePokemon, string name, string description, string typeName, PokeType type, int life, vector<Ability> abilitie)
 {
 	mTexturePokemon = texturePokemon;
 	mName = name;
 	mDescription = description;
 	mType = type;
+	mTypeName = typeName;
 	mLevel = 1;
 	mLife = life;
 	mMaxLife = mLife;
@@ -350,6 +352,11 @@ const vector<Ability>& Pokemon::GetAbilities() const
 string Pokemon::GetPokemonName() const
 {
 	return mName;
+}
+
+string Pokemon::GetPokemonTypeName() const
+{
+	return mTypeName;
 }
 
 float Pokemon::GetPokemonLife() const

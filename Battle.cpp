@@ -50,7 +50,6 @@ void Battle::BattleTrainerUpdate()
 
 	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
 	{
-		firstLine = toChangeLine;
 		secondLine = "";
 		imageIsLoad = false;
 	}
@@ -95,7 +94,11 @@ void Battle::BattleTrainerDraw()
 
 	if (positionInCode == 2)
 	{
+		firstLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
 		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
+		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
+		DrawText(TextFormat("(%s)", mOpponnentPokemon->GetPokemonTypeName().c_str()), 700, 210, 50, BLACK);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 300, 50, RED);
 	}
 
 	if (positionInCode == 4)
@@ -109,10 +112,12 @@ void Battle::BattleTrainerDraw()
 		DrawTexture(*mPlayerPokemon->GetPokemonTexture(), 50, 200, WHITE);
 
 		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
+		DrawText(TextFormat("(%s)", mOpponnentPokemon->GetPokemonTypeName().c_str()), 700, 210, 50, BLACK);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 300, 50, RED);
 
 		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);		
+		DrawText(TextFormat("(%s)", mPlayerPokemon->GetPokemonTypeName().c_str()), 500, 560, 50, BLACK);
+		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 650, 50, RED);		
 	}
 
 	if (positionInCode == 5)
@@ -154,7 +159,6 @@ Pokemon Battle::ChooseOpponentPokemon()
 	secondLine = mOpponentTrainer->Introduction();
 
 	positionInCode = 1;
-	toChangeLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
 }
@@ -370,7 +374,6 @@ void Battle::BattleCaptureUpdate()
 
 	if (positionInCode == 2 && IsKeyReleased(KEY_SPACE))
 	{
-		firstLine = toChangeLine;
 		secondLine = "";
 		imageIsLoad = false;
 	}

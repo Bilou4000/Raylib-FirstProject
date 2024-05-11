@@ -14,6 +14,7 @@ private:
 	Texture2D mTexturePokemon;
 	string mName;
 	string mDescription;
+	string mTypeName;
 	PokeType mType;
 	int mLevel;
 	float mLife;
@@ -25,7 +26,7 @@ private:
 
 public:
 	Pokemon();
-	Pokemon(Texture2D texturePokemon, string name, string description, PokeType type, int life, vector<Ability> abilitie);
+	Pokemon(Texture2D texturePokemon, string name, string description, string typeName, PokeType type, int life, vector<Ability> abilitie);
 
 	void UpdatePokemon();
 	void DrawPokemon();
@@ -41,6 +42,7 @@ public:
 
 	const vector<Ability>& GetAbilities() const;
 	string GetPokemonName() const;
+	string GetPokemonTypeName() const;
 	Texture2D* GetPokemonTexture();
 	float GetPokemonLife() const;
 	float GetPokemonMaxLife() const;

@@ -3,15 +3,17 @@
 Ability::Ability()
 {
 	mName = "Thunder";
+	mTypeName = "Electric";
 	mDamage = 40;
 	mPoketype = PokeType::Electric;
 	mNumberOfUse = 3;
 	mMaxNumberOfUse = 3;
 }
 
-Ability::Ability(string name, int damage, PokeType poketype, int numberOfUse)
+Ability::Ability(string name, string typeName, int damage, PokeType poketype, int numberOfUse)
 {
 	mName = name;
+	mTypeName = typeName;
 	mDamage = damage;
 	mPoketype = poketype;
 	mNumberOfUse = numberOfUse;
@@ -31,6 +33,11 @@ int Ability::GetTurnUse() const
 string Ability::GetName() const
 {
 	return mName;
+}
+
+string Ability::GetTypeName() const
+{
+	return mTypeName;
 }
 
 PokeType Ability::GetPoketype() const

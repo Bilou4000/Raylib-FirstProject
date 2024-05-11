@@ -11,14 +11,15 @@ class Ability
 {
 private:
 	string mName;
-	int mDamage;
+	string mTypeName;
 	PokeType mPoketype;
+	int mDamage;
 	int mNumberOfUse;
 	int mMaxNumberOfUse;
 
 public:
 	Ability();
-	Ability(string name, int damage, PokeType poketype, int numberOfUse);
+	Ability(string name, string typeName, int damage, PokeType poketype, int numberOfUse);
 
 	void ResetAbilityUse();
 	void UseAbility();
@@ -26,6 +27,7 @@ public:
 	int GetDamage() const;
 	int GetTurnUse() const;
 	string GetName() const;
+	string GetTypeName() const;
 	PokeType GetPoketype() const;
 
 };
