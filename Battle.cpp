@@ -11,7 +11,6 @@
 const char* firstLine = "";
 const char* secondLine = "";
 const char* thirdLine = "";
-const char* toChangeLine = "";
 
 bool imageIsLoad = true, imageIsUnload = false, battleIsFinished = false;
 bool isChangingPokemon = false, pokemonCanUseAbility = false, opponentPokemonIsDead = false, playerPokemonIsDead = false, pokemonIsLevelingUp = false, canLearnNewAbility = true;
@@ -95,6 +94,7 @@ void Battle::BattleTrainerDraw()
 	if (positionInCode == 2)
 	{
 		firstLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+		secondLine = "";
 
 		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
 		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
@@ -124,6 +124,7 @@ void Battle::BattleTrainerDraw()
 	if (positionInCode == 5)
 	{
 		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+		DrawText(TextFormat("%s", mPlayerPokemon->GetDescription().c_str()), 70, 870, 45, BLACK);
 	}
 
 	if (positionInCode == 15)
@@ -431,7 +432,12 @@ void Battle::BattleCaptureDraw()
 
 	if (positionInCode == 2)
 	{
+		firstLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
+
 		DrawTexture(*mOpponnentPokemon->GetPokemonTexture(), 1080, 30, WHITE);
+		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
+		DrawText(TextFormat("(%s)", mOpponnentPokemon->GetPokemonTypeName().c_str()), 700, 210, 50, DARKGRAY);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 300, 50, RED);
 	}
 
 	if (positionInCode == 4)
@@ -445,15 +451,18 @@ void Battle::BattleCaptureDraw()
 		DrawTexture(*mPlayerPokemon->GetPokemonTexture(), 50, 200, WHITE);
 
 		DrawText(TextFormat("%s", mOpponnentPokemon->GetPokemonName().c_str()), 700, 150, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 250, 50, RED);
+		DrawText(TextFormat("(%s)", mOpponnentPokemon->GetPokemonTypeName().c_str()), 700, 210, 50, DARKGRAY);
+		DrawText(TextFormat("%i / %i", int(mOpponnentPokemon->GetPokemonLife()), int(mOpponnentPokemon->GetPokemonMaxLife())), 800, 300, 50, RED);
 
 		DrawText(TextFormat("%s", mPlayerPokemon->GetPokemonName().c_str()), 500, 500, 60, BLACK);
-		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 600, 50, RED);
+		DrawText(TextFormat("(%s)", mPlayerPokemon->GetPokemonTypeName().c_str()), 500, 560, 50, DARKGRAY);
+		DrawText(TextFormat("%i / %i", int(mPlayerPokemon->GetPokemonLife()), int(mPlayerPokemon->GetPokemonMaxLife())), 500, 650, 50, RED);
 	}
 
 	if (positionInCode == 5)
 	{
 		firstLine = TextFormat("GO ! %s !", mPlayerPokemon->GetPokemonName().c_str());
+		DrawText(TextFormat("%s", mPlayerPokemon->GetDescription().c_str()), 70, 870, 45, BLACK);
 	}
 
 	if (positionInCode == 6)
@@ -532,13 +541,13 @@ Pokemon Battle::ChoosePokemonToCapture()
 
 	positionInCode = 0;
 	firstLine = "You stumble in a battle !";
+	secondLine = "";
 
 	srand(time(NULL));
 	int randomPokemon = rand() % AllPokemons::allPokemons.size();
 	mOpponnentPokemon = &AllPokemons::allPokemons[randomPokemon];
 
 	positionInCode = 1;
-	toChangeLine = TextFormat("You have encounter a wild %s", mOpponnentPokemon->GetPokemonName().c_str());
 
 	return *mOpponnentPokemon;
 }

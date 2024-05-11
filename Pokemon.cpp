@@ -331,12 +331,9 @@ void Pokemon::LearnNewAbilities()
 	return;
 }
 
-
-void Pokemon::GetDescription()
+string Pokemon::GetDescription() const
 {
-	//*************** TO REFACTOR ***************************************
-	//cout << "\n" << mName << mDescription << " and has " << mLife << " pv " <<
-	//	"\nHis abilities are " << endl;
+	return mDescription;
 }
 
 Texture2D* Pokemon::GetPokemonTexture()

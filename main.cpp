@@ -22,16 +22,11 @@ int answerPath = NULL;
 Rectangle TextBox { screenWidth - 1550, screenHeight - 425 - 20, 1500, 400 };
 Rectangle pathAnswerBox{ 780, 850, 80, 70 };
 
-//--------------------------------------TO CHANGE -------------------------------------------------------------------
 vector<Pokemon> firstTeam;
 vector<Pokemon> secondTeam;
 
-//Pansage, Minun, Vanillite, Snorlax, Magikarp,
-//Pancham, Minun, Plusle, Magikarp, 
-
 Trainer firstTrainer;
 Trainer secondTrainer;
-//--------------------------------------TO CHANGE -------------------------------------------------------------------
 
 StartGame startGame;
 
@@ -73,14 +68,12 @@ void Load()
     startGame.Init();
 
     //--------------------------------------TO CHANGE -------------------------------------------------------------------
-    //firstTeam = { AllPokemons::Minun, AllPokemons::Darumaka };
     secondTeam = { AllPokemons::Copperajah, AllPokemons::Snorlax, AllPokemons::Magikarp };
-
-    //firstTrainer = Trainer("Claire", "Benes", "As the wind continues to blow, so too shall I continue to fight !", firstTeam);
     secondTrainer = Trainer("MECHANT", "GRONUL", "OHOHOHOHOHOH !!!", secondTeam); 
 
-    theBattle = Battle(firstTrainer, secondTrainer);
     //--------------------------------------TO CHANGE -------------------------------------------------------------------
+    theBattle = Battle(firstTrainer, secondTrainer);
+
 }
 
 void Update() 

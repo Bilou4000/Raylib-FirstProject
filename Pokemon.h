@@ -38,9 +38,8 @@ public:
 	void ChooseAbility();
 	void LearnNewAbilities();
 
-	void GetDescription();
-
 	const vector<Ability>& GetAbilities() const;
+	string GetDescription() const;
 	string GetPokemonName() const;
 	string GetPokemonTypeName() const;
 	Texture2D* GetPokemonTexture();
