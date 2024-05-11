@@ -91,6 +91,16 @@ void Battle::BattleTrainerDraw()
 	DrawText(secondLine, 70, 870, 70, BLACK);
  	DrawText(thirdLine, 70, 1050, 70, BLACK);
 
+	if (positionInCode < 2)
+	{
+		firstLine = "";
+		secondLine = "";
+		thirdLine = "";
+
+		DrawText(mOpponentTrainer->ChallengeTrainer(), 70, 775, 65, BLACK);
+		DrawText(mOpponentTrainer->Introduction(), 70, 870, 50, BLACK);
+	}
+
 	if (positionInCode == 2)
 	{
 		firstLine = TextFormat("He is using %s to attack you", mOpponnentPokemon->GetPokemonName().c_str());
@@ -149,7 +159,7 @@ Pokemon Battle::ChooseOpponentPokemon()
 
 	positionInCode = 0;
 
-	firstLine = mOpponentTrainer->ChallengeTrainer();
+
 	mMaxAbilityCost = 30;
 
 	vector<Pokemon>& pokemonTeam = mOpponentTrainer->GetPokemonTeam();
@@ -157,8 +167,6 @@ Pokemon Battle::ChooseOpponentPokemon()
 	srand(time(NULL));
 	int randomPokemon = rand() % pokemonTeam.size();
 	mOpponnentPokemon = &pokemonTeam[randomPokemon];
-
-	secondLine = mOpponentTrainer->Introduction();
 
 	positionInCode = 1;
 

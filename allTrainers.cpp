@@ -30,8 +30,8 @@ void allTrainer::Init()
 	Henri = Trainer("Henri", "BESSOU", "I'll be nice !", std::vector<Pokemon> { AllPokemons::Minun });
 	Thomas = Trainer("Thomas", "VINADELLE", "Check the Viewport Workflow.", std::vector<Pokemon> { AllPokemons::Tornadus });
 	Nicolas = Trainer("Nicolas", "COUNIL", "Happy Birthday !!", std::vector<Pokemon> { AllPokemons::Gulpin });
-	Gaetan = Trainer("Gaëtan", "BLAISE-CAZALET", "MORE COOODE", std::vector<Pokemon> { AllPokemons::Copperajah });
-	Franck = Trainer("Franck", "BASSET", "I'm in a hurry", std::vector<Pokemon> { AllPokemons::Darumaka });
+	Gaetan = Trainer("Gaetan", "BLAISE-CAZALET", "MORE COOODE !!!!", std::vector<Pokemon> { AllPokemons::Copperajah });
+	Franck = Trainer("Franck", "BASSET", "I'm in a hurry.", std::vector<Pokemon> { AllPokemons::Darumaka });
 	Marc = Trainer("Marc", "LAMBERT", "Draw everyday !", std::vector<Pokemon> { AllPokemons::Vanillite });
 	Kevin = Trainer("Kevin", "LIEBER", "Let's have fun !", std::vector<Pokemon> { AllPokemons::Sudowoodo });
 	Florence = Trainer("Florence", "GUY", "Don't be late.", std::vector<Pokemon> { AllPokemons::Spectrier });
