@@ -109,6 +109,7 @@ void Trainer::DrawTrainer()
 		{
 			DrawTextureEx(*mPokemonTeam[i].GetPokemonTexture(), {pokemonPosition, 250}, 0, 0.6f, WHITE);
 			DrawText(TextFormat("%i. %s ", i + 1, mPokemonTeam[i].GetPokemonName().c_str()), pokemonPosition, 550, 35, BLACK);
+			DrawText(TextFormat("(%s)", mPokemonTeam[i].GetPokemonTypeName().c_str()), pokemonPosition, 600, 30, BLACK);
 			pokemonPosition += GetScreenWidth() / mPokemonTeam.size();
 		}
 	}
