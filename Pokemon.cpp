@@ -179,7 +179,7 @@ void Pokemon::DrawPokemon()
 		for (int i = 0; i < mAbilities.size(); i++)
 		{
 			DrawText(TextFormat("%i. %s ", i + 1, mAbilities[i].GetName().c_str()), 1030, abilityPos, 35, BLACK);
-			//print damage or poketype - or both
+			DrawText(TextFormat("(%s)", mAbilities[i].GetTypeName().c_str()), 1030, abilityPos + 40, 30, DARKGRAY);
 			abilityPos += 100;
 		}
 	}
@@ -233,7 +233,7 @@ void Pokemon::DrawPokemon()
 			for (int j = abilityNumber; j < 3 + abilityNumber; j++)
 			{
 				DrawText(TextFormat("%i. %s ", j + 1, allAbility[j].GetName().c_str()), abilityXPos, abilityYPos, 30, BLACK);
-				//print damage or poketype - or both
+				DrawText(TextFormat("(%s)", allAbility[j].GetTypeName().c_str()), abilityXPos, abilityYPos + 35, 25, DARKGRAY);
 				abilityXPos += 530;
 			}
 			abilityNumber += 3;
